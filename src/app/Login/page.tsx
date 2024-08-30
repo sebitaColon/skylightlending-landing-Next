@@ -41,7 +41,7 @@ export default function Login() {
             <Button variant="shadow" radius="full" color="primary">
               Get in touch
             </Button>
-          </div>wq
+          </div>
           {password ? (
             //forgot password
             <div>
@@ -83,7 +83,7 @@ export default function Login() {
           ) : (
             //login
             <div>
-              <h1 className="font-InterBold text-5xl flex flex-col leading-none tracking-[-0.8px]">
+              <h1 className="font-InterBold text-5xl ml-5 flex flex-col leading-none tracking-[-0.8px]">
                 <span className="text-blue-600">For Solar!</span>
                 Start here.
               </h1>
