@@ -19,7 +19,9 @@ module.exports = {
         InterBold: ['Inter Tight', 'sans-serif'],
       },
       colors: {
-        blueFooter: '#0f3788'
+        blueFooter: '#0f3788',
+        amarillo : '#c8a102'
+      
       }
     },
   },

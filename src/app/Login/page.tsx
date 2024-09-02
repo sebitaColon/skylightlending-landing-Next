@@ -27,7 +27,7 @@ export default function Login() {
 
   return (
     <Layout>
-      <div className="w-full h-auto flex flex-col items-center justify-center xl:h-[90vh] relative">
+      <div className="w-full h-auto flex flex-col items-center justify-center relative">
         <Image
           src={BackgrounImg}
           alt=""
