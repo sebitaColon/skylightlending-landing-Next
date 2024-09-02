@@ -16,12 +16,22 @@ export default function Nav() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const menuItems = [
-    "Installer/Dealer Application",
+    "Installer Dealer Application",
     "Our Story",
     "News",
     "Login",
     "Contact US",
   ];
+
+
+  const menuItemsLink = [
+    "Installer",
+    "OurStory",
+    "News",
+    "Login",
+    "ContactUS",
+  ];
+
 
 
   return (
@@ -46,7 +56,7 @@ export default function Nav() {
           <Link
             className="hover:bg-yellow-400 p-5 rounded-full"
             color="foreground"
-            href="/Installer/Dealer Application"
+            href="/Installer"
           >
             Installer/Dealer Application
           </Link>
@@ -55,7 +65,7 @@ export default function Nav() {
           <Link
             className="hover:bg-yellow-400 p-5 rounded-full"
             color="foreground"
-            href="#"
+            href="/OurStory"
           >
             Our Story
           </Link>
@@ -83,7 +93,7 @@ export default function Nav() {
           <Link
             className="hover:bg-yellow-400 p-5 rounded-full"
             color="foreground"
-            href="/Contactos"
+            href="/ContactUS"
           >
             Contact Us
           </Link>
@@ -93,7 +103,7 @@ export default function Nav() {
       <NavbarMenu className="z-40">
         {menuItems.map((item, index) => (
           <NavbarMenuItem className="mt-20" key={`${item}-${index}`}>
-            <Link className="w-full" href={"/" + item} size="lg">
+            <Link className="w-full" href={"/" + menuItemsLink[index]} size="lg">
               {item}
             </Link>
           </NavbarMenuItem>
