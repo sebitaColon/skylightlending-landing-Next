@@ -11,46 +11,9 @@ import {
 } from "@nextui-org/react";
 import AcmeLogo from "../../assets/logo/logo.png";
 import Image from "next/image";
-interface User {
-  id: number;
-  nombre: string;
-  apellido: string;
-  correo:string;
-}
 
 export default function Page() {
-  const [data, setData] = useState<User[]>([]); // Usa la interfaz User
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/route");
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const json: User[] = await response.json();
-        setData(json); // Asegúrate de que json sea del tipo User[]
-        
-
-      } catch (error) {
-        setError(
-          error instanceof Error ? error.message : "An unknown error occurred"
-        );
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (data.length === 0) {
-    return <div>Loading...</div>;
-  }
-
+ 
   return (
 
     <div>
@@ -116,19 +79,15 @@ export default function Page() {
 
         </TableHeader>
         <TableBody emptyContent="No rows to display.">
-          {data.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell>{user.nombre}</TableCell>
-              <TableCell>{user.apellido}</TableCell>
-              <TableCell>{user.correo}</TableCell>
+            <TableRow >
+              <TableCell>..</TableCell>
+              <TableCell>.</TableCell>
+              <TableCell>.</TableCell>
 
             </TableRow>
-          ))}
         </TableBody>
       </Table>
-      {data.length === 0 && (
-        <div>No users found</div>
-      )}
+
     </div>
   );
 }

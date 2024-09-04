@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id_users Int    @id
+  name     String @default(dbgenerated("255")) @db.VarChar
+  lastname String @default(dbgenerated("255")) @db.VarChar
+  email    String @default(dbgenerated("255")) @db.VarChar
+  password String @default(dbgenerated("255")) @db.VarChar
+}
+
+model forms {
+  id_forms       Int    @id
+  name           String @default(dbgenerated("255")) @db.VarChar
+  lastname       String @default(dbgenerated("255")) @db.VarChar
+  numbercontact  Int    @default(255)
+  companynamber  String @default(dbgenerated("255")) @db.VarChar
+  email          String @default(dbgenerated("255")) @db.VarChar
+  companywebsite String @default(dbgenerated("255")) @db.VarChar
+  references     String @default(dbgenerated("255")) @db.VarChar
+}
