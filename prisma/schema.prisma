@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id Int    @id @default(autoincrement())
+  name      String @db.VarChar(255)
+  last_name String @db.VarChar(255)
+  email     String @db.VarChar(255) @unique //no haya dos usuarios con el mismo correo electrónico.
+  password  String @db.VarChar(255)
+}
+
+model forms {
+  id_forms        Int    @id
+  name            String @db.VarChar(255)
+  last_name       String @db.VarChar(255)
+  number_contact  Int    @default(255)
+  company_namber  String @db.VarChar(255)
+  email           String @db.VarChar(255)
+  company_website String @db.VarChar(255)
+  references      String @db.VarChar(255)
+}
