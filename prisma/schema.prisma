@@ -16,11 +16,11 @@ model Users {
 }
 
 model forms {
-  id_forms        Int    @id
+  id              Int    @id @default(autoincrement())
   name            String @db.VarChar(255)
   last_name       String @db.VarChar(255)
-  number_contact  Int    @default(255)
-  company_namber  String @db.VarChar(255)
+  number_contact  String @db.VarChar(255)
+  company_name    String @db.VarChar(255)
   email           String @db.VarChar(255)
   company_website String @db.VarChar(255)
   references      String @db.VarChar(255)

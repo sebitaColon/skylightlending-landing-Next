@@ -7,84 +7,63 @@ import DoneLogo from "../../assets/done.svg";
 import DangerLogo from "../../assets/danger.svg";
 import Image from "next/image";
 import { useState } from "react";
+import schema from "@/validation/installerSchema";
 
 function Installer() {
   // Estado para manejar el color del borde del input y los errores
   const [alerts, setAlerts] = useState(true);
   const [alertColor, setAlertColor] = useState("bg-white");
-  const [BgAlertColorIcon, setBgAlertColorIcon] = useState("");
   const [alertHidden, setAlertHidden] = useState(true);
 
-  // Estados para los errores de los campos
-  const [nameError, setNameError] = useState("");
-  const [lastNameError, setLastNameError] = useState("");
-  const [companyNameError, setCompanyNameError] = useState("");
-  const [contactNumberError, setContactNumberError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [websiteError, setWebsiteError] = useState("");
+  // Valores iniciales del formulario
+  const initialFormValues = {
+    name: "",
+    lastName: "",
+    companyName: "",
+    contactNumber: "",
+    email: "",
+    website: "",
+    references: "",
+  };
 
-  function validar() {
+  const [formValues, setFormValues] = useState(initialFormValues);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
+  };
+
+  // Función para vaciar los campos del formulario
+  const handleReset = () => {
+    setFormValues(initialFormValues);
+  };
+
+  const esconderAlert = () => {
     setAlertHidden(true);
     setAlertColor("bg-white");
-    setAlerts(true); // Asumir que la validación pasó
-  }
+  };
 
-  function searchError() {
-    // Contar errores
-    const errors = [nameError, lastNameError, companyNameError, contactNumberError, emailError, websiteError];
-    const errorCount = errors.filter(error => error).length;
-
-    if (errorCount > 0) {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
       setAlertHidden(false);
-      setAlertColor("bg-red-400");
-      setBgAlertColorIcon("bg-red-500");
-      setAlerts(false);
-    } else {
-      setAlertColor("bg-green-400");
-      setBgAlertColorIcon("bg-green-500");
-      setAlerts(true);
-    }
-  }
-  // Función para manejar el evento onChange
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    let errorMessage = "";
-    if (value.length === 0) {
-      errorMessage = "This field is required.";
-    } else if (name === "contactNumber" && isNaN(Number(value))) {
-      errorMessage = "Contact number must be a number.";
-    } else if (name === "email" && !/\S+@\S+\.\S+/.test(value)) {
-      errorMessage = "Invalid email address.";
-    }
-    switch (name) {
-      case "name":
-        setNameError(errorMessage);
-        break;
-      case "lastName":
-        setLastNameError(errorMessage);
-        break;
-      case "companyName":
-        setCompanyNameError(errorMessage);
-        break;
-      case "contactNumber":
-        setContactNumberError(errorMessage);
-        break;
-      case "email":
-        setEmailError(errorMessage);
-        break;
-      case "website":
-        setWebsiteError(errorMessage);
-        break;
-      default:
-        break;
-    }
+      setAlertColor("bg-white");
 
-    searchError(); // Llama a searchError para actualizar el estado del alert
+      // Validar los valores del formulario
+      await schema.validate(formValues, { abortEarly: false });
+      // Si la validación pasa
+      setAlertColor("bg-green-400");
+      setAlertHidden(false);
+      setAlerts(true);
+      handleReset();
+      // Aquí puedes manejar el envío de datos, si es necesario
+    } catch (e) {
+      setAlertColor("bg-red-400");
+      setAlertHidden(false);
+      setAlerts(false);
+    }
   };
 
   // Contar los errores al renderizar
-  const errorCount = [nameError, lastNameError, companyNameError, contactNumberError, emailError, websiteError].filter(error => error).length;
-
   return (
     <Layout>
       <div className="w-full h-auto flex flex-col items-center justify-center relative">
@@ -102,7 +81,11 @@ function Installer() {
             } flex overflow-hidden items-center justify-evenly rounded-3xl transition-all duration-500 ease-in-out `}
           >
             <div className="flex items-center text-black">
-              <div className={`${BgAlertColorIcon} rounded-full h-auto mr-2`}>
+              <div
+                className={`${
+                  alerts ? "bg-green-500" : "bg-red-500"
+                } rounded-full h-auto mr-2`}
+              >
                 <img
                   className="w-8  h-auto"
                   src={alerts ? DoneLogo : DangerLogo}
@@ -111,19 +94,19 @@ function Installer() {
               </div>
               <p>
                 {alerts
-                  ? "Well done! All errors are fixed."
-                  : `There ${errorCount === 1 ? "is" : "are"} ${errorCount} ${errorCount === 1 ? "error" : "errors"} on this page. Please correct it before moving on.`}
+                  ? "Well done! All errors are fixed. Form sent."
+                  : "There is an error in the form. Please correct it before continuing."}
               </p>
             </div>
             <Button
               color={alerts ? "success" : "danger"}
               className="text-white"
-              onPress={alerts ? validar : searchError}
+              onPress={esconderAlert}
             >
               {alerts ? "Done" : "See Errors"}
             </Button>
           </div>
-          <form action="" className="bg-white p-5 rounded-3xl ">
+          <form onSubmit={handleSubmit} className="bg-white p-5 rounded-3xl ">
             <h1 className="font-InterBold text-center text-black text-md sm:text-3xl pb-10 mb-5 border-b-1">
               <span className="text-blue-600 pr-1">Skylight Lending New</span>
               Dealer Application
@@ -135,30 +118,32 @@ function Installer() {
                   radius="sm"
                   variant="underlined"
                   color={alerts ? "success" : "danger"}
-                  onChange={handleInputChange}
                   size="lg"
+                  value={formValues["name"]}
+                  onChange={handleChange}
                   isRequired
                   type="text"
                   label="Your Name "
                   labelPlacement="outside"
                   placeholder="First Name"
                   className="w-full h-auto px-2 text-black"
-                  isInvalid={!alerts && !!nameError}
+                  isInvalid={!alerts}
                 />
                 <Input
                   name="lastName"
                   radius="sm"
                   variant="underlined"
                   color={alerts ? "success" : "danger"}
-                  onChange={handleInputChange}
                   size="lg"
+                  value={formValues["lastName"]}
+                  onChange={handleChange}
                   isRequired
                   type="text"
                   label="Last name "
                   labelPlacement="outside"
                   placeholder="First Name"
                   className="w-full h-auto px-2 text-black"
-                  isInvalid={!alerts && !!lastNameError}
+                  isInvalid={!alerts}
                 />
               </div>
               <div className="w-full">
@@ -167,15 +152,16 @@ function Installer() {
                   radius="sm"
                   variant="underlined"
                   color={alerts ? "success" : "danger"}
-                  onChange={handleInputChange}
                   size="lg"
+                  onChange={handleChange}
+                  value={formValues["companyName"]}
                   isRequired
                   type="text"
                   label="Company Name "
                   placeholder="SkyLight"
                   labelPlacement="outside"
                   className="w-full h-auto px-2"
-                  isInvalid={!alerts && !!companyNameError}
+                  isInvalid={!alerts}
                 />
               </div>
               <div className="w-full">
@@ -184,15 +170,16 @@ function Installer() {
                   radius="sm"
                   variant="underlined"
                   color={alerts ? "success" : "danger"}
-                  onChange={handleInputChange}
                   size="lg"
+                  onChange={handleChange}
+                  value={formValues["contactNumber"]}
                   isRequired
                   type="number"
                   label="Contact Number "
                   placeholder="(000) 000-0000"
                   labelPlacement="outside"
                   className="w-full h-auto px-2"
-                  isInvalid={!alerts && !!contactNumberError}
+                  isInvalid={!alerts}
                 />
               </div>
               <div className="w-full">
@@ -201,7 +188,8 @@ function Installer() {
                   radius="sm"
                   variant="underlined"
                   color={alerts ? "success" : "danger"}
-                  onChange={handleInputChange}
+                  onChange={handleChange}
+                  value={formValues["email"]}
                   size="lg"
                   isRequired
                   type="email"
@@ -209,7 +197,7 @@ function Installer() {
                   placeholder="ex: myname@example.com"
                   labelPlacement="outside"
                   className="w-full h-auto px-2"
-                  isInvalid={!alerts && !!emailError}
+                  isInvalid={!alerts}
                 />
               </div>
               <div className="w-full">
@@ -219,6 +207,8 @@ function Installer() {
                   variant="underlined"
                   color="default"
                   size="lg"
+                  onChange={handleChange}
+                  value={formValues["website"]}
                   startContent={
                     <div className="pointer-events-none flex items-center">
                       <span className="text-default-400 text-small">
@@ -231,16 +221,18 @@ function Installer() {
                   placeholder="www.example.com"
                   labelPlacement="outside"
                   className="w-full h-auto px-2"
-                  isInvalid={!alerts && !!websiteError}
                 />
               </div>
               <div className=""></div>
               <div className="w-full">
                 <Input
+                  name="references"
                   radius="sm"
                   variant="underlined"
                   color="default"
                   size="lg"
+                  onChange={handleChange}
+                  value={formValues["references"]}
                   type="text"
                   label="References (i.e. Account Manager, Contacts, etc.) "
                   placeholder=" "
@@ -259,7 +251,7 @@ function Installer() {
               >
                 Save
               </Button>
-              <Button radius="sm" color="primary">
+              <Button type="submit" radius="sm" color="primary">
                 Next
               </Button>
             </div>
