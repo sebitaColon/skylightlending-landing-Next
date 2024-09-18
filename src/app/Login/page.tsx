@@ -7,11 +7,15 @@ import { ModalLogin } from "../../components/Modal";
 import { useDisclosure } from "@nextui-org/react";
 import Image from "next/image";
 
-export default function Login() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [state, setState] = useState(false);
-  const [view, setView] = useState("login"); // Puede ser 'login', 'forgotPassword', 'register'
+import { loginValidation } from "../../validation/loginValidation";
+import { registerValidation } from "../../validation/resgisterValidation";
+import { yupResolver } from "@hookform/resolvers/yup"; // Importa yupResolver
+import { useForm } from "react-hook-form"; // Importa useForm
+import toast, { Toaster } from "react-hot-toast"; //Alertas flotantes
 
+export default function Login() {
+  //abrir modales
+  const { isOpen, onOpen, onClose } = useDisclosure();
   function estado() {
     setState(true);
     onOpen();
@@ -21,6 +25,8 @@ export default function Login() {
     onOpen();
   }
 
+  //cambiar estados
+  const [view, setView] = useState("login"); // Puede ser 'login', 'forgotPassword', 'register'
   const handleForgotPassword = () => {
     setView("ForgotPassword");
   };
@@ -31,8 +37,77 @@ export default function Login() {
     setView("login");
   };
 
+  // Configuración de react-hook-form con yup - login
+  const [state, setState] = useState(false);
+  const {
+    register: loginRegister,
+    handleSubmit: handleLoginSubmit,
+    formState: { errors: loginErrors },
+  } = useForm({
+    resolver: yupResolver(loginValidation),
+  });
+
+  // Configuración de react-hook-form con yup - register
+  const {
+    register: registerRegister,
+    handleSubmit: handleRegisterSubmit,
+    formState: { errors: registerErrors},
+    reset: resetRegister,
+  } = useForm({
+    resolver: yupResolver(registerValidation),
+  });
+
+  // Función para enviar los datos del formulario a la API
+  const onLoginSubmit = async (data: any) => {
+    // Aqui manejar el envío de datos, como hacer una llamada a la API para el login
+    try {
+      // Incluir el estado de view en el cuerpo de la solicitud
+      const requestData = { ...data, view: "login" }; // Se agrega el estado `view` al body
+      const response = await fetch("./api/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData), // Se envían los datos y el view
+      });
+      const result = await response.json();
+      if (!result.success) {
+        toast.error(`${result.message}`);
+      } else {
+        toast.success(`Login successful`); //aca enviar a otra pagina
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const onRegisterSubmit = async (data: any) => {
+    // Aqui manejar el envío de datos, como hacer una llamada a la API para el login
+    try {
+      // Incluir el estado de view en el cuerpo de la solicitud
+      const requestData = { ...data, view: "register" }; // Se agrega el estado `view` al body
+      const response = await fetch("./api/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData), // Se envían los datos y el view
+      });
+      const result = await response.json();
+      if (!result.success) {
+        toast.error(`${result.message}`);
+      } else {
+        toast.success(`Registro exitoso`);
+        resetRegister();
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <Layout>
+      <Toaster position="bottom-center" />
       <div className="w-full h-auto flex flex-col items-center justify-center relative">
         <Image
           src={BackgrounImg}
@@ -48,8 +123,8 @@ export default function Login() {
               Get in touch
             </Button>
           </div>
+
           {view === "ForgotPassword" ? (
-            //forgot password
             <div>
               <div id="ForgotPassword" className="gap-0 w-full">
                 <div className="flex py-2 px-1 items-center justify-between">
@@ -88,7 +163,7 @@ export default function Login() {
             </div>
           ) : view === "register" ? (
             <div id="register">
-              <form>
+              <form onSubmit={handleRegisterSubmit(onRegisterSubmit)}>
                 <div className="flex py-2 px-1 items-center justify-between">
                   <h1>Create Account</h1>
                   <Button
@@ -102,18 +177,63 @@ export default function Login() {
                   </Button>
                 </div>
                 <h1 className="pt-2 pl-1">Name</h1>
-                <Input autoFocus placeholder="Name" variant="underlined" />
+                <Input
+                  autoFocus
+                  placeholder="Name"
+                  variant="underlined"
+                  {...registerRegister("name", {
+                    required: true,
+                  })}
+                />
+                {registerErrors.name && <p className="text-red-500">{registerErrors.name.message}</p>}
                 <h1 className="pt-2 pl-1">Last name</h1>
-                <Input autoFocus placeholder="Last name" variant="underlined" />
+                <Input
+                  autoFocus
+                  placeholder="Last name"
+                  variant="underlined"
+                  {...registerRegister("last_name", {
+                    required: true,
+                  })}
+                />
+                {registerErrors.last_name && (
+                  <p className="text-red-500">{registerErrors.last_name.message}</p>
+                )}
                 <h1 className="pt-2 pl-1">Email</h1>
-                <Input autoFocus placeholder="Email" variant="underlined" />
+                <Input
+                  autoFocus
+                  placeholder="Email"
+                  variant="underlined"
+                  {...registerRegister("email", {
+                    required: true,
+                  })}
+                />
+                {registerErrors.email && <p className="text-red-500">{registerErrors.email.message}</p>}
                 <h1 className="pt-2 pl-1">Password</h1>
                 <Input
                   autoFocus
                   variant="underlined"
                   placeholder="........."
                   type="password"
+                  {...registerRegister("password", {
+                    required: true,
+                  })}
                 />
+                {registerErrors.password && (
+                  <p className="text-red-500">{registerErrors.password.message}</p>
+                )}
+                <h1 className="pt-2 pl-1">Confirm Password</h1>
+                <Input
+                  type="password"
+                  autoFocus
+                  variant="underlined"
+                  placeholder="........."
+                  {...registerRegister("confirmPassword",{
+                    required: true,
+                  })} 
+                />
+                {registerErrors.confirmPassword && (
+                  <p className="text-red-500">{registerErrors.confirmPassword.message}</p>
+                )}
 
                 <div className="w-full flex justify-center">
                   <Button
@@ -129,13 +249,15 @@ export default function Login() {
               </form>
             </div>
           ) : (
-            //login
             <div id="login">
               <h1 className="font-InterBold text-5xl ml-5 flex flex-col leading-none tracking-[-0.8px]">
                 <span className="text-blue-600">For Solar!</span>
                 Start here.
               </h1>
-              <form className="bg-background text-foreground p-5 rounded-3xl ">
+              <form
+                className="bg-background text-foreground p-5 rounded-3xl"
+                onSubmit={handleLoginSubmit(onLoginSubmit)} // Asocia handleSubmit con el envío del formulario
+              >
                 <div id="Login" className=" w-full">
                   <div className="flex pt-10 py-2 px-1 justify-between">
                     <h1>Email Address</h1>
@@ -152,7 +274,14 @@ export default function Login() {
                     autoFocus
                     placeholder="Enter your email"
                     variant="underlined"
+                    {...loginRegister("email", {
+                      required: true,
+                    })} // Asocia el input con react-hook-form
+                    // Mostrar mensaje de error si lo hay
                   />
+                  {loginErrors.email && (
+                    <p className="text-red-500">{loginErrors.email.message}</p>
+                  )}
                   <div className="flex pt-10 py-2 px-1 justify-between">
                     <h1>Password</h1>
                     <Link
@@ -168,7 +297,15 @@ export default function Login() {
                     variant="underlined"
                     placeholder="........."
                     type="password"
+                    {...loginRegister("password", {
+                      required: true,
+                    })} // Asocia el input con react-hook-form
                   />
+                  {loginErrors.password && (
+                    <p className="text-red-500">
+                      {loginErrors.password.message}
+                    </p>
+                  )}
                   <div className="w-full flex justify-center">
                     <Button
                       className="mt-10 w-full sm:max-w-xl"
@@ -177,8 +314,7 @@ export default function Login() {
                       variant="shadow"
                       type="submit"
                     >
-                      {" "}
-                      Login{" "}
+                      Login
                     </Button>
                   </div>
                 </div>

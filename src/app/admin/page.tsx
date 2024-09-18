@@ -25,6 +25,7 @@ interface User {
   name: string;
   last_name: string;
   email: string;
+  password: string;
 }
 
 export default function Admin() {
@@ -51,14 +52,14 @@ export default function Admin() {
           <Image src={AcmeLogo} alt="" />
         </NavbarBrand>
 
-        <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarContent className="dark hidden sm:flex gap-4" justify="center">
           <NavbarItem>
             <Link color="foreground" href="#">
               Features
             </Link>
           </NavbarItem>
-          <NavbarItem isActive>
-            <Link href="#" aria-current="page" color="secondary">
+          <NavbarItem>
+            <Link color="foreground" href="#">
               Customers
             </Link>
           </NavbarItem>
@@ -70,7 +71,7 @@ export default function Admin() {
         </NavbarContent>
 
         <NavbarContent as="div" justify="end">
-          <Dropdown placement="bottom-end">
+          <Dropdown placement="bottom">
             <DropdownTrigger>
               <Avatar
                 isBordered
@@ -89,10 +90,7 @@ export default function Admin() {
               </DropdownItem>
               <DropdownItem key="settings">My Settings</DropdownItem>
               <DropdownItem key="team_settings">Team Settings</DropdownItem>
-              <DropdownItem key="analytics">Analytics</DropdownItem>
-              <DropdownItem key="system">System</DropdownItem>
               <DropdownItem key="configurations">Configurations</DropdownItem>
-              <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
               <DropdownItem key="logout" color="danger">
                 Log Out
               </DropdownItem>
@@ -103,9 +101,10 @@ export default function Admin() {
 
       <Table className="m-5 w-auto" aria-label="Users Table">
         <TableHeader>
-          <TableColumn>NOMBRE</TableColumn>
-          <TableColumn>APELLIDO</TableColumn>
-          <TableColumn>CORREO</TableColumn>
+          <TableColumn>Name</TableColumn>
+          <TableColumn>Last Name</TableColumn>
+          <TableColumn>Email</TableColumn>
+          <TableColumn>Password</TableColumn>
         </TableHeader>
         <TableBody emptyContent="No rows to display.">
           {users.map((user, index) => (
@@ -113,6 +112,7 @@ export default function Admin() {
               <TableCell>{user.name}</TableCell>
               <TableCell>{user.last_name}</TableCell>
               <TableCell>{user.email}</TableCell>
+              <TableCell>{user.password}</TableCell>
             </TableRow>
           ))}
         </TableBody>
