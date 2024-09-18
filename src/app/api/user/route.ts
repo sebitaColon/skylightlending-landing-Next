@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const usuarios = await prisma.users.findMany();
+    const usuarios = await prisma.user.findMany();
     return new NextResponse(JSON.stringify(usuarios),{ status : 201 });
   } catch (e) {
     return new NextResponse(JSON.stringify({ error: "Internal server error" }), { status: 500 });
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   const { name, last_name, email, password } = await request.json();
 
   try {
-    const nuevoUsuario = await prisma.users.create({
+    const nuevoUsuario = await prisma.user.create({
       data: {
         name,
         last_name,

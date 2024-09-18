@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
+model User {
   id Int    @id @default(autoincrement())
   name      String @db.VarChar(255)
   last_name String @db.VarChar(255)
@@ -15,13 +15,3 @@ model Users {
   password  String @db.VarChar(255)
 }
 
-model forms {
-  id              Int    @id @default(autoincrement())
-  name            String @db.VarChar(255)
-  last_name       String @db.VarChar(255)
-  number_contact  String @db.VarChar(255)
-  company_name    String @db.VarChar(255)
-  email           String @db.VarChar(255)
-  company_website String @db.VarChar(255)
-  references      String @db.VarChar(255)
-}
