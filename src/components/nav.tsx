@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import {
   Navbar,
@@ -23,16 +23,7 @@ export default function Nav() {
     "Contact US",
   ];
 
-
-  const menuItemsLink = [
-    "Installer",
-    "OurStory",
-    "News",
-    "Login",
-    "ContactUS",
-  ];
-
-
+  const menuItemsLink = ["Installer", "OurStory", "News", "Login", "ContactUS"];
 
   return (
     <Navbar
@@ -51,10 +42,10 @@ export default function Nav() {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden md:flex gap-4 " justify="center">
+      <NavbarContent className="hidden md:flex gap-1 lg:gap-3" justify="center">
         <NavbarItem>
           <Link
-            className="hover:bg-yellow-400 p-5 rounded-full"
+            className=" text-sm  lg:text-lg hover:bg-yellow-400 p-5 rounded-full"
             color="foreground"
             href="/Installer"
           >
@@ -63,7 +54,7 @@ export default function Nav() {
         </NavbarItem>
         <NavbarItem>
           <Link
-            className="hover:bg-yellow-400 p-5 rounded-full"
+            className="text-sm lg:text-lg  hover:bg-yellow-400 p-5 rounded-full"
             color="foreground"
             href="/OurStory"
           >
@@ -72,7 +63,7 @@ export default function Nav() {
         </NavbarItem>
         <NavbarItem>
           <Link
-            className="hover:bg-yellow-400 p-5 rounded-full"
+            className="text-sm lg:text-lg hover:bg-yellow-400 p-5 rounded-full"
             href="/News"
             color="foreground"
             aria-current="page"
@@ -82,7 +73,7 @@ export default function Nav() {
         </NavbarItem>
         <NavbarItem>
           <Link
-            className="hover:bg-yellow-400 p-5 rounded-full"
+            className="text-sm  lg:text-lg hover:bg-yellow-400 p-5 rounded-full"
             color="foreground"
             href="/Login"
           >
@@ -91,7 +82,7 @@ export default function Nav() {
         </NavbarItem>
         <NavbarItem>
           <Link
-            className="hover:bg-yellow-400 p-5 rounded-full"
+            className="text-sm lg:text-lg  hover:bg-yellow-400 p-5 rounded-full"
             color="foreground"
             href="/ContactUS"
           >
@@ -103,7 +94,11 @@ export default function Nav() {
       <NavbarMenu className="z-40">
         {menuItems.map((item, index) => (
           <NavbarMenuItem className="mt-20" key={`${item}-${index}`}>
-            <Link className="w-full" href={"/" + menuItemsLink[index]} size="lg">
+            <Link
+              className="w-full"
+              href={"/" + menuItemsLink[index]}
+              size="lg"
+            >
               {item}
             </Link>
           </NavbarMenuItem>
