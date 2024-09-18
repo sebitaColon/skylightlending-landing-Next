@@ -3,17 +3,14 @@
 import Layout from "../../components/Layout";
 import { Input, Button } from "@nextui-org/react";
 import BackgrounImg from "../../assets/FondoFormInstaller.jpg";
-import DoneLogo from "../../assets/done.svg";
-import DangerLogo from "../../assets/danger.svg";
 import Image from "next/image";
 import { useState } from "react";
 import schema from "@/validation/installerSchema";
+import toast, { Toaster } from "react-hot-toast";
 
 function Installer() {
   // Estado para manejar el color del borde del input y los errores
   const [alerts, setAlerts] = useState(true);
-  const [alertColor, setAlertColor] = useState("bg-white");
-  const [alertHidden, setAlertHidden] = useState(true);
 
   // Valores iniciales del formulario
   const initialFormValues = {
@@ -37,28 +34,21 @@ function Installer() {
     setFormValues(initialFormValues);
   };
 
-  const esconderAlert = () => {
-    setAlertHidden(true);
-    setAlertColor("bg-white");
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setAlertHidden(false);
-      setAlertColor("bg-white");
-
       // Validar los valores del formulario
       await schema.validate(formValues, { abortEarly: false });
       // Si la validación pasa
-      setAlertColor("bg-green-400");
-      setAlertHidden(false);
-      setAlerts(true);
+      toast.success("Well done! All errors are fixed.");
       handleReset();
+      setAlerts(true);
+
       // Aquí puedes manejar el envío de datos, si es necesario
     } catch (e) {
-      setAlertColor("bg-red-400");
-      setAlertHidden(false);
+      toast.error(
+        "There error on this page. Please correct it before moving on.."
+      );
       setAlerts(false);
     }
   };
@@ -72,40 +62,10 @@ function Installer() {
           alt=""
           className="absolute object-cover w-full h-full -z-10"
         />
+        <Toaster position="bottom-center" />
         <div
-          className={`w-auto h-auto p-0.5 ${alertColor} mt-40 mb-20 rounded-3xl transition-all duration-500 ease-in-out`}
+          className={`w-auto h-auto p-0.5 mt-40 mb-20 rounded-3xl transition-all duration-500 ease-in-out`}
         >
-          <div
-            className={`${alertColor} w-full ${
-              alertHidden ? "h-0" : "h-16"
-            } flex overflow-hidden items-center justify-evenly rounded-3xl transition-all duration-500 ease-in-out `}
-          >
-            <div className="flex items-center text-black">
-              <div
-                className={`${
-                  alerts ? "bg-green-500" : "bg-red-500"
-                } rounded-full h-auto mr-2`}
-              >
-                <img
-                  className="w-8  h-auto"
-                  src={alerts ? DoneLogo : DangerLogo}
-                  alt=""
-                />
-              </div>
-              <p>
-                {alerts
-                  ? "Well done! All errors are fixed. Form sent."
-                  : "There is an error in the form. Please correct it before continuing."}
-              </p>
-            </div>
-            <Button
-              color={alerts ? "success" : "danger"}
-              className="text-white"
-              onPress={esconderAlert}
-            >
-              {alerts ? "Done" : "See Errors"}
-            </Button>
-          </div>
           <form onSubmit={handleSubmit} className="bg-white p-5 rounded-3xl ">
             <h1 className="font-InterBold text-center text-black text-md sm:text-3xl pb-10 mb-5 border-b-1">
               <span className="text-blue-600 pr-1">Skylight Lending New</span>
@@ -220,10 +180,10 @@ function Installer() {
                   label="Company Website "
                   placeholder="www.example.com"
                   labelPlacement="outside"
-                  className="w-full h-auto px-2"
+                  className="w-full h-auto px-2 sm:mb-4 lg:mb-0"
                 />
               </div>
-              <div className=""></div>
+              <div className="h-0"></div>
               <div className="w-full">
                 <Input
                   name="references"
