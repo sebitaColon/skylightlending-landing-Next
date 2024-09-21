@@ -8,9 +8,9 @@ import { useDisclosure } from "@nextui-org/react";
 import Image from "next/image";
 
 export default function Login() {
-  const [password, setPassword] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [state, setState] = useState(false);
+  const [view, setView] = useState("login"); // Puede ser 'login', 'forgotPassword', 'register'
 
   function estado() {
     setState(true);
@@ -21,9 +21,15 @@ export default function Login() {
     onOpen();
   }
 
-  function ForgortPassword() {
-    setPassword(!password);
-  }
+  const handleForgotPassword = () => {
+    setView("ForgotPassword");
+  };
+  const handleRegister = () => {
+    setView("register");
+  };
+  const handleLogin = () => {
+    setView("login");
+  };
 
   return (
     <Layout>
@@ -42,7 +48,7 @@ export default function Login() {
               Get in touch
             </Button>
           </div>
-          {password ? (
+          {view === "ForgotPassword" ? (
             //forgot password
             <div>
               <div id="ForgotPassword" className="gap-0 w-full">
@@ -53,7 +59,7 @@ export default function Login() {
                     variant="shadow"
                     radius="full"
                     color="primary"
-                    onClick={ForgortPassword}
+                    onClick={handleLogin}
                   >
                     back
                   </Button>
@@ -73,28 +79,75 @@ export default function Login() {
                     radius="full"
                     color="primary"
                     variant="shadow"
-                    onClick={ForgortPassword}
+                    onClick={handleForgotPassword}
                   >
                     Send reset code
                   </Button>
                 </div>
               </div>
             </div>
+          ) : view === "register" ? (
+            <div id="register">
+              <form>
+                <div className="flex py-2 px-1 items-center justify-between">
+                  <h1>Create Account</h1>
+                  <Button
+                    className="w-1/6"
+                    variant="shadow"
+                    radius="full"
+                    color="primary"
+                    onClick={handleLogin}
+                  >
+                    back
+                  </Button>
+                </div>
+                <h1 className="pt-2 pl-1">Name</h1>
+                <Input autoFocus placeholder="Name" variant="underlined" />
+                <h1 className="pt-2 pl-1">Last name</h1>
+                <Input autoFocus placeholder="Last name" variant="underlined" />
+                <h1 className="pt-2 pl-1">Email</h1>
+                <Input autoFocus placeholder="Email" variant="underlined" />
+                <h1 className="pt-2 pl-1">Password</h1>
+                <Input
+                  autoFocus
+                  variant="underlined"
+                  placeholder="........."
+                  type="password"
+                />
+
+                <div className="w-full flex justify-center">
+                  <Button
+                    className="mt-10 w-full sm:max-w-xl"
+                    radius="full"
+                    color="primary"
+                    variant="shadow"
+                    type="submit"
+                  >
+                    Create Account
+                  </Button>
+                </div>
+              </form>
+            </div>
           ) : (
             //login
-            <div>
+            <div id="login">
               <h1 className="font-InterBold text-5xl ml-5 flex flex-col leading-none tracking-[-0.8px]">
                 <span className="text-blue-600">For Solar!</span>
                 Start here.
               </h1>
-              <form
-                action=""
-                className="bg-background text-foreground p-5 rounded-3xl "
-              >
+              <form className="bg-background text-foreground p-5 rounded-3xl ">
                 <div id="Login" className=" w-full">
-                  <h1 className="flex py-2 px-1 justify-start ">
-                    Email Address
-                  </h1>
+                  <div className="flex pt-10 py-2 px-1 justify-between">
+                    <h1>Email Address</h1>
+                    <Link
+                      color="primary"
+                      href="#"
+                      onClick={handleRegister}
+                      size="sm"
+                    >
+                      Create Account
+                    </Link>
+                  </div>
                   <Input
                     autoFocus
                     placeholder="Enter your email"
@@ -105,14 +158,13 @@ export default function Login() {
                     <Link
                       color="primary"
                       href="#"
-                      onClick={ForgortPassword}
+                      onClick={handleForgotPassword}
                       size="sm"
                     >
                       Forgot password?
                     </Link>
                   </div>
                   <Input
-                    autoFocus
                     variant="underlined"
                     placeholder="........."
                     type="password"
@@ -123,6 +175,7 @@ export default function Login() {
                       radius="full"
                       color="primary"
                       variant="shadow"
+                      type="submit"
                     >
                       {" "}
                       Login{" "}
@@ -134,10 +187,10 @@ export default function Login() {
           )}
           <div className="flex flex-col justify-center items-center mt-3 p-5 sm:flex-row sm:justify-between">
             <h1>© 2024 Skylight Lending, LLC</h1>
-            <h1>
+            <div className="cursor-pointer">
               <Link onClick={estado}>Privacy Policy</Link> |{" "}
               <Link onClick={estado2}>Terms of Service</Link>
-            </h1>
+            </div>
           </div>
         </div>
       </div>

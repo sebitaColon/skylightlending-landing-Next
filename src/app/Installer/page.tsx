@@ -1,43 +1,59 @@
-"use client"
+"use client";
 
 import Layout from "../../components/Layout";
 import { Input, Button } from "@nextui-org/react";
 import BackgrounImg from "../../assets/FondoFormInstaller.jpg";
-import DoneLogo from "../../assets/done.svg";
-import DangerLogo from "../../assets/danger.svg";
 import Image from "next/image";
 import { useState } from "react";
+import schema from "@/validation/installerSchema";
+import toast, { Toaster } from "react-hot-toast";
 
 function Installer() {
-  // Estado para manejar el color del borde del input
+  // Estado para manejar el color del borde del input y los errores
   const [alerts, setAlerts] = useState(true);
-  const [alertColor, setAlertColor] = useState("bg-white");
-  const [BgAlertColorIcon, setBgAlertColorIcon] = useState("");
-  const [alertHidden, setAlertHidden] = useState(true);
 
-  function Validar() {
-    setAlertHidden(true);
-    setAlertColor("bg-white");
-  }
+  // Valores iniciales del formulario
+  const initialFormValues = {
+    name: "",
+    lastName: "",
+    companyName: "",
+    contactNumber: "",
+    email: "",
+    website: "",
+    references: "",
+  };
 
-  function searchError() {}
+  const [formValues, setFormValues] = useState(initialFormValues);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
+  };
 
-  // Función para manejar el evento onChange
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    // Lógica para cambiar el color según el valor
-    if (value.length == 0) {
-      setAlerts(false);
-      setAlertColor("bg-red-400");
-      setBgAlertColorIcon("bg-red-500");
-      setAlertHidden(false);
-    } else {
+  // Función para vaciar los campos del formulario
+  const handleReset = () => {
+    setFormValues(initialFormValues);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Validar los valores del formulario
+      await schema.validate(formValues, { abortEarly: false });
+      // Si la validación pasa
+      toast.success("Well done! All errors are fixed.");
+      handleReset();
       setAlerts(true);
-      setAlertColor("bg-green-400");
-      setBgAlertColorIcon("bg-green-500");
+
+      // Aquí puedes manejar el envío de datos, si es necesario
+    } catch (e) {
+      toast.error(
+        "There error on this page. Please correct it before moving on.."
+      );
+      setAlerts(false);
     }
   };
 
+  // Contar los errores al renderizar
   return (
     <Layout>
       <div className="w-full h-auto flex flex-col items-center justify-center relative">
@@ -46,37 +62,11 @@ function Installer() {
           alt=""
           className="absolute object-cover w-full h-full -z-10"
         />
+        <Toaster position="bottom-center" />
         <div
-          className={`w-auto h-auto p-0.5 ${alertColor} mt-40 mb-20 rounded-3xl transition-all duration-500 ease-in-out`}
+          className={`w-auto h-auto p-0.5 mt-40 mb-20 rounded-3xl transition-all duration-500 ease-in-out`}
         >
-          <div
-            className={`${alertColor} w-full ${
-              alertHidden ? "h-0" : "h-16"
-            } flex overflow-hidden items-center justify-evenly rounded-3xl transition-all duration-500 ease-in-out `}
-          >
-            <div className="flex items-center text-black">
-              <div className={`${BgAlertColorIcon} rounded-full h-auto mr-2`}>
-                <img
-                  className="w-8  h-auto"
-                  src={alerts ? DoneLogo : DangerLogo}
-                  alt=""
-                />
-              </div>
-              <p>
-                {alerts
-                  ? "Well done! All errors are fixed."
-                  : "There is 1 error on this page. Please correct it before moving on."}
-              </p>
-            </div>
-            <Button
-              color={alerts ? "success" : "danger"}
-              className="text-white"
-              onPress={alerts ? Validar : searchError}
-            >
-              {alerts ? "Done" : "See Errors"}
-            </Button>
-          </div>
-          <form action="" className="bg-white p-5 rounded-3xl ">
+          <form onSubmit={handleSubmit} className="bg-white p-5 rounded-3xl ">
             <h1 className="font-InterBold text-center text-black text-md sm:text-3xl pb-10 mb-5 border-b-1">
               <span className="text-blue-600 pr-1">Skylight Lending New</span>
               Dealer Application
@@ -84,11 +74,13 @@ function Installer() {
             <div className="w-full grid sm:grid-cols-2 sm:grid-rows-4 gap-5 bg-white">
               <div className="h-auto flex items-end">
                 <Input
+                  name="name"
                   radius="sm"
                   variant="underlined"
                   color={alerts ? "success" : "danger"}
-                  onChange={handleInputChange}
                   size="lg"
+                  value={formValues["name"]}
+                  onChange={handleChange}
                   isRequired
                   type="text"
                   label="Your Name "
@@ -98,11 +90,13 @@ function Installer() {
                   isInvalid={!alerts}
                 />
                 <Input
+                  name="lastName"
                   radius="sm"
                   variant="underlined"
                   color={alerts ? "success" : "danger"}
-                  onChange={handleInputChange}
                   size="lg"
+                  value={formValues["lastName"]}
+                  onChange={handleChange}
                   isRequired
                   type="text"
                   label="Last name "
@@ -114,11 +108,13 @@ function Installer() {
               </div>
               <div className="w-full">
                 <Input
+                  name="companyName"
                   radius="sm"
                   variant="underlined"
                   color={alerts ? "success" : "danger"}
-                  onChange={handleInputChange}
                   size="lg"
+                  onChange={handleChange}
+                  value={formValues["companyName"]}
                   isRequired
                   type="text"
                   label="Company Name "
@@ -130,11 +126,13 @@ function Installer() {
               </div>
               <div className="w-full">
                 <Input
+                  name="contactNumber"
                   radius="sm"
                   variant="underlined"
                   color={alerts ? "success" : "danger"}
-                  onChange={handleInputChange}
                   size="lg"
+                  onChange={handleChange}
+                  value={formValues["contactNumber"]}
                   isRequired
                   type="number"
                   label="Contact Number "
@@ -146,10 +144,12 @@ function Installer() {
               </div>
               <div className="w-full">
                 <Input
+                  name="email"
                   radius="sm"
                   variant="underlined"
                   color={alerts ? "success" : "danger"}
-                  onChange={handleInputChange}
+                  onChange={handleChange}
+                  value={formValues["email"]}
                   size="lg"
                   isRequired
                   type="email"
@@ -162,10 +162,13 @@ function Installer() {
               </div>
               <div className="w-full">
                 <Input
+                  name="website"
                   radius="sm"
                   variant="underlined"
                   color="default"
                   size="lg"
+                  onChange={handleChange}
+                  value={formValues["website"]}
                   startContent={
                     <div className="pointer-events-none flex items-center">
                       <span className="text-default-400 text-small">
@@ -177,16 +180,19 @@ function Installer() {
                   label="Company Website "
                   placeholder="www.example.com"
                   labelPlacement="outside"
-                  className="w-full h-auto px-2"
+                  className="w-full h-auto px-2 sm:mb-4 lg:mb-0"
                 />
               </div>
-              <div className=""></div>
+              <div className="h-0"></div>
               <div className="w-full">
                 <Input
+                  name="references"
                   radius="sm"
                   variant="underlined"
                   color="default"
                   size="lg"
+                  onChange={handleChange}
+                  value={formValues["references"]}
                   type="text"
                   label="References (i.e. Account Manager, Contacts, etc.) "
                   placeholder=" "
@@ -205,7 +211,7 @@ function Installer() {
               >
                 Save
               </Button>
-              <Button radius="sm" color="primary">
+              <Button type="submit" radius="sm" color="primary">
                 Next
               </Button>
             </div>
