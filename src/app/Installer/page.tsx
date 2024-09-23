@@ -6,6 +6,8 @@ import BackgrounImg from "../../assets/FondoFormInstaller.jpg";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
+import schema from "../../validation/installerSchema";
+import { yupResolver } from "@hookform/resolvers/yup"; // Importa yupResolver
 
 function Installer() {
   const {
@@ -16,6 +18,7 @@ function Installer() {
     trigger,
   } = useForm({
     mode: "onChange",
+    resolver: yupResolver(schema),
   });
 
   const onSubmit = (data: any) => {
@@ -45,13 +48,7 @@ function Installer() {
             <div className="w-full grid sm:grid-cols-2  sm:grid-rows-4 gap-x-5  bg-white">
               <div className="h-auto flex flex-col">
                 <Input
-                  {...register("name", {
-                    required: "El nombre es obligatorio",
-                    minLength: {
-                      value: 2,
-                      message: "El nombre debe tener al menos 2 caracteres",
-                    },
-                  })}
+                  {...register("name")}
                   radius="sm"
                   variant="underlined"
                   size="lg"
@@ -60,7 +57,6 @@ function Installer() {
                   className="w-full h-auto px-2 text-black"
                   onBlur={() => trigger("name")} // Valida cuando el campo pierde el foco
                 />
-                -
                 {errors.name && (
                   <p className="text-red-500 h-auto max-w-[350px] text-sm mt-1 px-2">
                     {errors.name.message}
@@ -70,13 +66,7 @@ function Installer() {
 
               <div className="h-auto flex flex-col">
                 <Input
-                  {...register("lastName", {
-                    required: "El apellido es obligatorio",
-                    minLength: {
-                      value: 2,
-                      message: "El apellido debe tener al menos 2 caracteres",
-                    },
-                  })}
+                  {...register("lastName")}
                   radius="sm"
                   variant="underlined"
                   size="lg"
@@ -94,14 +84,7 @@ function Installer() {
 
               <div className="w-full h-auto flex flex-col">
                 <Input
-                  {...register("companyName", {
-                    required: "El nombre de la empresa es obligatorio",
-                    minLength: {
-                      value: 4,
-                      message:
-                        "El nombre de la empresa debe tener al menos 4 caracteres",
-                    },
-                  })}
+                  {...register("companyName")}
                   radius="sm"
                   variant="underlined"
                   size="lg"
@@ -119,14 +102,7 @@ function Installer() {
 
               <div className="w-full h-auto flex flex-col">
                 <Input
-                  {...register("contactNumber", {
-                    required: "El número de contacto es obligatorio",
-                    minLength: {
-                      value: 10,
-                      message:
-                        "El número de contacto debe tener al menos 10 dígitos",
-                    },
-                  })}
+                  {...register("contactNumber")}
                   radius="sm"
                   variant="underlined"
                   size="lg"
@@ -144,13 +120,7 @@ function Installer() {
 
               <div className="w-full h-auto flex flex-col">
                 <Input
-                  {...register("email", {
-                    required: "El correo es obligatorio",
-                    pattern: {
-                      value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
-                      message: "Ingrese un correo válido",
-                    },
-                  })}
+                  {...register("email")}
                   radius="sm"
                   variant="underlined"
                   size="lg"
