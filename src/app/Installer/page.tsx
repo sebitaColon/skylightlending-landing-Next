@@ -8,24 +8,48 @@ import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import schema from "../../validation/installerSchema";
 import { yupResolver } from "@hookform/resolvers/yup"; // Importa yupResolver
+import emailjs from 'emailjs-com';
 
 function Installer() {
+
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
     trigger,
+    formState: { errors },
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: any) => {
-    toast.success("Formulario enviado correctamente.");
-    console.log(data);
-    reset();
+  emailjs.init('016fb4rLiCkb73A46'); // Reemplaza con tu User ID
+  
+  const onSubmit = async (data: any) => {
+
+    try {
+      const result = await emailjs.send('service_6s6jz0t', 'template_iatawok',{
+        to_name: data.name,
+        to_lastName: data.lastName,
+        from_name: data.from_name,
+        companyName: data.companyName,
+        contactNumber: data.contactNumber,
+        email: data.email,
+        website: data.website,
+        references: data.references,
+        message: 'Espero tu respuesta',
+      }); // Enviar directamente el objeto de datos
+      console.log('Email enviado:', result.text);
+      toast.success("Formulario enviado correctamente.");
+      reset();
+    } catch (error:any) {
+      console.log('Error al enviar el email:', error.text);
+      toast.error("Formulario no enviado");
+    }
+
   };
+
 
   return (
     <Layout>
@@ -124,7 +148,7 @@ function Installer() {
                   radius="sm"
                   variant="underlined"
                   size="lg"
-                  label="E-mail "
+                  label="Email"
                   placeholder="ex: myname@example.com"
                   className="w-full h-auto px-2"
                   onBlur={() => trigger("email")}
@@ -156,7 +180,8 @@ function Installer() {
                   variant="underlined"
                   size="lg"
                   type="text"
-                  label="References (i.e. Account Manager, Contacts, etc.) "
+                  label="References"
+                  placeholder="(i.e. Account Manager, Contacts, etc.)"
                   className="w-full h-auto px-2"
                 />
               </div>
