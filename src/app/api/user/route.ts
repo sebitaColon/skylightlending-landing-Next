@@ -1,10 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
 export async function GET() {
   try {
     const usuarios = await prisma.user.findMany();
+    
     return new NextResponse(JSON.stringify(usuarios), { status: 201 });
   } catch (e) {
     return new NextResponse(
@@ -21,12 +23,9 @@ export async function POST(request: Request) {
 
   if (view == "login") {
     try {
-      //consulta a la base de datos
       const userLogin = await prisma.user.findUnique({
         where: { email },
       });
-
-      //si el usuario no existe
       if (!userLogin) {
         return new NextResponse(
           JSON.stringify({ message: "User not found", success: false }),
@@ -34,15 +33,16 @@ export async function POST(request: Request) {
         );
       }
 
-      //compara si la contraseña es correcta
-      if (userLogin.password !== password) {
+      const isPasswordValid = await bcrypt.compare(
+        password,
+        userLogin.password
+      );
+      if (!isPasswordValid) {
         return new NextResponse(
           JSON.stringify({ message: "Incorrect password", success: false }),
           { status: 401 }
         );
       }
-      
-      //si todo esta okey
       return new NextResponse(
         JSON.stringify({ message: "Login successful", success: true }),
         { status: 200 }
@@ -54,16 +54,13 @@ export async function POST(request: Request) {
       );
     }
   } else if (view == "register") {
-     // Validar datos de entrada si estan vacios
     if (!name || !last_name || !email || !password) {
       return new NextResponse(
-        JSON.stringify({ message:"All fields are required", success: false }),
+        JSON.stringify({ message: "All fields are required", success: false }),
         { status: 400 }
       );
     }
-    // Verificar si el usuario ya existe
     try {
-
       const existingUser = await prisma.user.findUnique({
         where: { email },
       });
@@ -74,23 +71,28 @@ export async function POST(request: Request) {
         );
       }
 
-      // Crear nuevo usuario
+      const hashedPassword = await bcrypt.hash(password, 10);
       const nuevoUsuario = await prisma.user.create({
         data: {
           name,
           last_name,
           email,
-          password, // En un entorno real, asegúrate de encriptar la contraseña antes de guardarla
+          password: hashedPassword,
         },
       });
-      return new NextResponse( JSON.stringify({message:  "User created successfully", success: true, data: nuevoUsuario}));
-    } catch (error) {
-      // Manejo de errores más detallado
       return new NextResponse(
-        JSON.stringify({ error: "Internal server error"}),
+        JSON.stringify({
+          message: "User created successfully",
+          success: true,
+          data: nuevoUsuario,
+        })
+      );
+    } catch (error) {
+      return new NextResponse(
+        JSON.stringify({ error: "Internal server error" }),
         { status: 500 }
       );
-    } 
+    }
   }
 
   await prisma.$disconnect();
