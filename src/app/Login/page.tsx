@@ -6,14 +6,16 @@ import { useState } from "react";
 import { ModalLogin } from "../../components/Modal";
 import { useDisclosure } from "@nextui-org/react";
 import Image from "next/image";
-
 import { loginValidation } from "../../validation/loginValidation";
 import { registerValidation } from "../../validation/resgisterValidation";
-import { yupResolver } from "@hookform/resolvers/yup"; // Importa yupResolver
-import { useForm } from "react-hook-form"; // Importa useForm
-import toast, { Toaster } from "react-hot-toast"; //Alertas flotantes
+import { gmailPassword } from "../../validation/gmailForgotPassword";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
+  const router = useRouter();
   //abrir modales
   const { isOpen, onOpen, onClose } = useDisclosure();
   function estado() {
@@ -24,11 +26,9 @@ export default function Login() {
     setState(false);
     onOpen();
   }
-
-  //cambiar estados
-  const [view, setView] = useState("login"); // Puede ser 'login', 'forgotPassword', 'register'
+  const [view, setView] = useState("login");
   const handleForgotPassword = () => {
-    setView("ForgotPassword");
+    setView("forgotPassword");
   };
   const handleRegister = () => {
     setView("register");
@@ -37,44 +37,52 @@ export default function Login() {
     setView("login");
   };
 
-  // Configuración de react-hook-form con yup - login
   const [state, setState] = useState(false);
   const {
     register: loginRegister,
     handleSubmit: handleLoginSubmit,
     formState: { errors: loginErrors },
+    reset: loginReset,
+
   } = useForm({
     resolver: yupResolver(loginValidation),
   });
 
-  // Configuración de react-hook-form con yup - register
   const {
     register: registerRegister,
     handleSubmit: handleRegisterSubmit,
-    formState: { errors: registerErrors},
+    formState: { errors: registerErrors },
     reset: resetRegister,
   } = useForm({
     resolver: yupResolver(registerValidation),
   });
 
-  // Función para enviar los datos del formulario a la API
+  const {
+    register: forgotPassword,
+    handleSubmit: handleForgotSubmit,
+    formState: { errors: forgotErrors },
+    reset: forgotPasswordReset,
+  } = useForm({
+    resolver: yupResolver(gmailPassword),
+  });
+
   const onLoginSubmit = async (data: any) => {
-    // Aqui manejar el envío de datos, como hacer una llamada a la API para el login
     try {
-      // Incluir el estado de view en el cuerpo de la solicitud
-      const requestData = { ...data, view: "login" }; // Se agrega el estado `view` al body
+      const requestData = { ...data, view: "login" };
       const response = await fetch("./api/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(requestData), // Se envían los datos y el view
+        body: JSON.stringify(requestData),
       });
       const result = await response.json();
       if (!result.success) {
         toast.error(`${result.message}`);
       } else {
-        toast.success(`Login successful`); //aca enviar a otra pagina
+        toast.success(`Login successful`);
+        loginReset();
+        router.push("/admin");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -82,16 +90,14 @@ export default function Login() {
   };
 
   const onRegisterSubmit = async (data: any) => {
-    // Aqui manejar el envío de datos, como hacer una llamada a la API para el login
     try {
-      // Incluir el estado de view en el cuerpo de la solicitud
-      const requestData = { ...data, view: "register" }; // Se agrega el estado `view` al body
+      const requestData = { ...data, view: "register" };
       const response = await fetch("./api/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(requestData), // Se envían los datos y el view
+        body: JSON.stringify(requestData),
       });
       const result = await response.json();
       if (!result.success) {
@@ -99,6 +105,29 @@ export default function Login() {
       } else {
         toast.success(`Registro exitoso`);
         resetRegister();
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const onForgotSubmit = async (data: any) => {
+    try {
+      const requestData = { ...data, view: "forgotPassword" };
+      const response = await fetch("./api/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      const result = await response.json();
+      if (!result.success) {
+        toast.error(`${result.message}`);
+      } else {
+        toast.success(`Check your gmail`);
+        forgotPasswordReset();
       }
     } catch (error) {
       console.error("Error:", error);
@@ -124,9 +153,12 @@ export default function Login() {
             </Button>
           </div>
 
-          {view === "ForgotPassword" ? (
+          {view === "forgotPassword" ? (
             <div>
-              <div id="ForgotPassword" className="gap-0 w-full">
+              <form
+                onSubmit={handleForgotSubmit(onForgotSubmit)}
+                className="gap-0 w-full"
+              >
                 <div className="flex py-2 px-1 items-center justify-between">
                   <h1>Reset Password</h1>
                   <Button
@@ -134,7 +166,7 @@ export default function Login() {
                     variant="shadow"
                     radius="full"
                     color="primary"
-                    onClick={handleLogin}
+                    onPress={handleLogin}
                   >
                     back
                   </Button>
@@ -143,7 +175,14 @@ export default function Login() {
                   autoFocus
                   placeholder="Enter your email"
                   variant="underlined"
+                  {...forgotPassword("email", {
+                    required: true,
+                  })}
                 />
+                {forgotErrors.email && (
+                  <p className="text-red-500">{forgotErrors.email.message}</p>
+                )}
+
                 <p className="pt-4">
                   {" "}
                   Please enter your email address to reset your password.
@@ -154,12 +193,12 @@ export default function Login() {
                     radius="full"
                     color="primary"
                     variant="shadow"
-                    onClick={handleForgotPassword}
+                    type="submit"
                   >
                     Send reset code
                   </Button>
                 </div>
-              </div>
+              </form>
             </div>
           ) : view === "register" ? (
             <div id="register">
@@ -185,7 +224,9 @@ export default function Login() {
                     required: true,
                   })}
                 />
-                {registerErrors.name && <p className="text-red-500">{registerErrors.name.message}</p>}
+                {registerErrors.name && (
+                  <p className="text-red-500">{registerErrors.name.message}</p>
+                )}
                 <h1 className="pt-2 pl-1">Last name</h1>
                 <Input
                   autoFocus
@@ -196,7 +237,9 @@ export default function Login() {
                   })}
                 />
                 {registerErrors.last_name && (
-                  <p className="text-red-500">{registerErrors.last_name.message}</p>
+                  <p className="text-red-500">
+                    {registerErrors.last_name.message}
+                  </p>
                 )}
                 <h1 className="pt-2 pl-1">Email</h1>
                 <Input
@@ -207,7 +250,9 @@ export default function Login() {
                     required: true,
                   })}
                 />
-                {registerErrors.email && <p className="text-red-500">{registerErrors.email.message}</p>}
+                {registerErrors.email && (
+                  <p className="text-red-500">{registerErrors.email.message}</p>
+                )}
                 <h1 className="pt-2 pl-1">Password</h1>
                 <Input
                   autoFocus
@@ -219,7 +264,9 @@ export default function Login() {
                   })}
                 />
                 {registerErrors.password && (
-                  <p className="text-red-500">{registerErrors.password.message}</p>
+                  <p className="text-red-500">
+                    {registerErrors.password.message}
+                  </p>
                 )}
                 <h1 className="pt-2 pl-1">Confirm Password</h1>
                 <Input
@@ -227,12 +274,14 @@ export default function Login() {
                   autoFocus
                   variant="underlined"
                   placeholder="........."
-                  {...registerRegister("confirmPassword",{
+                  {...registerRegister("confirmPassword", {
                     required: true,
-                  })} 
+                  })}
                 />
                 {registerErrors.confirmPassword && (
-                  <p className="text-red-500">{registerErrors.confirmPassword.message}</p>
+                  <p className="text-red-500">
+                    {registerErrors.confirmPassword.message}
+                  </p>
                 )}
 
                 <div className="w-full flex justify-center">
