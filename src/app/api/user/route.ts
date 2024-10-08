@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
+import jwt from "jsonwebtoken";
 const prisma = new PrismaClient();
 
 export async function GET() {
@@ -32,7 +33,6 @@ export async function POST(request: Request) {
           { status: 404 }
         );
       }
-
       const isPasswordValid = await bcrypt.compare(
         password,
         userLogin.password
@@ -43,10 +43,29 @@ export async function POST(request: Request) {
           { status: 401 }
         );
       }
-      return new NextResponse(
+
+      const JWT_SECRET = process.env.JWT_SECRET || "SECRET";
+      const token = jwt.sign(
+        {
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // Expira en 30 días
+          id: userLogin.id,
+          email: userLogin.email,
+          role: userLogin.rol,
+        },
+        JWT_SECRET
+      );
+      const response = new NextResponse(
         JSON.stringify({ message: "Login successful", success: true }),
         { status: 200 }
       );
+      response.cookies.set("myToken", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 30,
+        path: "/",
+      });
+      return response;
     } catch (error) {
       return new NextResponse(
         JSON.stringify({ error: "Internal server error" }),
@@ -109,26 +128,35 @@ export async function POST(request: Request) {
         );
       }
 
-     //aca enviar el correo con token
-     const resetLink = `http://localhost:3000/ForgotPassword?token=${email}`;
-     const transporter = nodemailer.createTransport({
-       service: 'gmail',
-       auth: {
-           user: process.env.GMAIL,
-           pass: process.env.PASSWORD, 
-       },
-       tls: {
-        rejectUnauthorized: false // Ignora certificados no válidos
-      }
-     });
-     const mailOptions = {
-       from: 'i06047071@gmail.com',
-       to: email,
-       subject: 'Restablecer tu contraseña',
-       text: `Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace para continuar: ${resetLink}`,
-       html: `<p>Has solicitado restablecer tu contraseña.</p><p><a href="${resetLink}">Haz clic aquí para restablecer tu contraseña</a></p>`,
-     };
-    transporter.sendMail(mailOptions)
+      const JWT_SECRET = process.env.JWT_SECRET || "SECRET";
+      const token = jwt.sign(
+        {
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // Expira en 30 días
+          id: existingUser.id,
+          email: existingUser.email,
+        },
+        JWT_SECRET
+      );
+      //aca enviar el correo con token
+      const resetLink = `http://localhost:3000/ForgotPassword?token=${token}`;
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.GMAIL,
+          pass: process.env.PASSWORD,
+        },
+        tls: {
+          rejectUnauthorized: false, // Ignora certificados no válidos
+        },
+      });
+      const mailOptions = {
+        from: "i06047071@gmail.com",
+        to: email,
+        subject: "Restablecer tu contraseña",
+        text: `Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace para continuar: ${resetLink}`,
+        html: `<p>Has solicitado restablecer tu contraseña.</p><p><a href="${resetLink}">Haz clic aquí para restablecer tu contraseña</a></p>`,
+      };
+      transporter.sendMail(mailOptions);
 
       return new NextResponse(
         JSON.stringify({ message: "Email sent successfully", success: true }),
@@ -141,12 +169,12 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
-  }else if (view == "resetPassword"){
-      console.log(password);
-      return new NextResponse(
-        JSON.stringify({ message: "Email sent successfully", success: true }),
-        { status: 200 }
-      );
+  } else if (view == "resetPassword") {
+    console.log(password);
+    return new NextResponse(
+      JSON.stringify({ message: "Email sent successfully", success: true }),
+      { status: 200 }
+    );
   }
 
   await prisma.$disconnect();
@@ -154,24 +182,42 @@ export async function POST(request: Request) {
 
 export async function PUT(req: Request) {
   try {
-    const { password, emailToken} = await req.json();
+    const JWT_SECRET = process.env.JWT_SECRET || "SECRET";
+    const { password, emailToken } = await req.json();
+
+    const decoded = jwt.verify(emailToken, JWT_SECRET) as { email: string };
+
     const user = await prisma.user.findUnique({
-      where: { email: emailToken },
+      where: { email: decoded.email },
     });
-    console.log(password)
+
     if (!user) {
-      return new Response(JSON.stringify({ success: false, message: "User not found" }), { status: 404 });
+      return new Response(
+        JSON.stringify({ success: false, message: "User not found" }),
+        { status: 404 }
+      );
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
+
     await prisma.user.update({
-      where: { email: emailToken },
+      where: { email: user.email },
       data: { password: hashedPassword },
     });
-    return new Response(JSON.stringify({ success: true, message: "Password updated successfully" }), { status: 200 });
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Password updated successfully",
+      }),
+      { status: 200 }
+    );
   } catch (error) {
     console.error(error);
-    return new Response(JSON.stringify({ success: false, message: "An error occurred" }), { status: 500 });
-  } finally{
+    return new Response(
+      JSON.stringify({ success: false, message: "An error occurred" }),
+      { status: 500 }
+    );
+  } finally {
     await prisma.$disconnect();
   }
 }

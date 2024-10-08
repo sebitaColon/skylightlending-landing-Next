@@ -8,10 +8,10 @@ datasource db {
 }
 
 model User {
-  id Int    @id @default(autoincrement())
+  id        Int    @id @default(autoincrement())
   name      String @db.VarChar(255)
   last_name String @db.VarChar(255)
-  email     String @db.VarChar(255) @unique //no haya dos usuarios con el mismo correo electrónico.
+  email     String @unique @db.VarChar(255)
   password  String @db.VarChar(255)
+  rol       Int    @default(1)
 }
-
