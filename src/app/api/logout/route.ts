@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-const JWT_SECRET = process.env.JWT_SECRET || 'SECRET';
+import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
+const JWT_SECRET = process.env.JWT_SECRET || "SECRET";
 export async function GET(req: NextRequest) {
-  const token = req.cookies.get('myToken')?.value;
+  const token = req.cookies.get("myToken")?.value;
   if (!token) {
     return new NextResponse(
       JSON.stringify({ message: "Not authenticated", success: false }),
@@ -10,9 +10,17 @@ export async function GET(req: NextRequest) {
     );
   }
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: number; email: string; role: number };
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      id: number;
+      email: string;
+      role: number;
+    };
     return new NextResponse(
-      JSON.stringify({ message: "User data fetched", success: true, data: decoded }),
+      JSON.stringify({
+        message: "User data fetched",
+        success: true,
+        data: decoded,
+      }),
       { status: 200 }
     );
   } catch (error) {
@@ -28,12 +36,12 @@ export async function POST() {
     JSON.stringify({ message: "Logout successful", success: true }),
     { status: 200 }
   );
-  response.cookies.set('myToken', '', {
+  response.cookies.set("myToken", "", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    expires: new Date(0),
-    path: '/',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 0,
+    path: "/",
   });
 
   return response;

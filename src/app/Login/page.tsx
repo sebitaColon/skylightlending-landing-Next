@@ -82,7 +82,11 @@ export default function Login() {
       } else {
         toast.success(`Login successful`);
         loginReset();
-        router.push("/admin");
+        if(result.rol === 1){
+          router.push("/HomeUser");
+        }else{
+          router.push("/admin");
+        }
       }
     } catch (error) {
       console.error("Error:", error);

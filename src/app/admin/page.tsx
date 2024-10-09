@@ -12,7 +12,7 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Link,
+  Spinner,
   DropdownItem,
   DropdownTrigger,
   Dropdown,
@@ -27,6 +27,7 @@ interface User {
   last_name: string;
   email: string;
   password: string;
+  rol: number;
 }
 
 interface AdminState {
@@ -41,7 +42,6 @@ export default function Admin() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch admin data
         const resAdmin = await fetch("/api/logout", {
           method: "GET",
           headers: {
@@ -49,13 +49,10 @@ export default function Admin() {
           },
         });
         const adminData = await resAdmin.json();
-
         if (!adminData.success) {
           router.push("/Login");
           return;
         }
-
-        // Fetch users data
         const resUsers = await fetch("/api/user");
         const usersData = await resUsers.json();
 
@@ -87,7 +84,13 @@ export default function Admin() {
       console.error("An error occurred during logout", error);
     }
   };
-
+  if (!data) {
+    return (
+      <div className="flex gap-4 w-full h-screen justify-center items-center">
+        <Spinner label="Secondary" color="secondary" labelColor="secondary" />
+      </div>
+    );
+  }
   return (
     <div>
       <Navbar className="bg-blue-500">
@@ -96,20 +99,8 @@ export default function Admin() {
         </NavbarBrand>
 
         <NavbarContent className="dark hidden sm:flex gap-4" justify="center">
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Customers
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Integrations
-            </Link>
+          <NavbarItem className="text-white font-bold">
+              SKYLENDING
           </NavbarItem>
         </NavbarContent>
 
@@ -120,7 +111,7 @@ export default function Admin() {
                 isBordered
                 as="button"
                 className="transition-transform"
-                color="secondary"
+                color="primary"
                 name="Jason Hughes"
                 size="sm"
                 src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
@@ -148,6 +139,7 @@ export default function Admin() {
           <TableColumn>Last Name</TableColumn>
           <TableColumn>Email</TableColumn>
           <TableColumn>Password</TableColumn>
+          <TableColumn>Rol</TableColumn>
         </TableHeader>
         <TableBody emptyContent="No rows to display.">
           {data.users.map((user, index) => (
@@ -156,6 +148,7 @@ export default function Admin() {
               <TableCell>{user.last_name}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.password}</TableCell>
+              <TableCell>{user.rol === 1 ? "usuario":"admin"}</TableCell>
             </TableRow>
           ))}
         </TableBody>

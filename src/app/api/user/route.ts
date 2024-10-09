@@ -72,7 +72,7 @@ async function handleLogin(email: string, password: string) {
       JWT_SECRET
     );
     const response = new NextResponse(
-      JSON.stringify({ message: "Login successful", success: true }),
+      JSON.stringify({ message: "Login successful", success: true, rol:userLogin.rol }),
       { status: 200 }
     );
     response.cookies.set("myToken", token, {
