@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Table,
   TableHeader,
@@ -28,22 +29,64 @@ interface User {
   password: string;
 }
 
+interface AdminState {
+  users: User[];
+  userAdmin: { id: number; email: string; role: number } | null;
+}
+
 export default function Admin() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [data, setData] = useState<AdminState>({ users: [], userAdmin: null });
+  const router = useRouter();
 
   useEffect(() => {
-    async function fetchUsers() {
+    const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/user");
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    }
+        // Fetch admin data
+        const resAdmin = await fetch("/api/logout", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const adminData = await resAdmin.json();
 
-    fetchUsers();
-  }, []);
+        if (!adminData.success) {
+          router.push("/Login");
+          return;
+        }
+
+        // Fetch users data
+        const resUsers = await fetch("/api/user");
+        const usersData = await resUsers.json();
+
+        setData({ userAdmin: adminData.data, users: usersData });
+      } catch (error) {
+        console.error("Error fetching data", error);
+        router.push("/Login");
+      }
+    };
+
+    fetchData();
+  }, [router]);
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        router.push("/Login");
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("An error occurred during logout", error);
+    }
+  };
 
   return (
     <div>
@@ -86,12 +129,12 @@ export default function Admin() {
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">zoey@example.com</p>
+                <p className="font-semibold">{data.userAdmin?.email || ""}</p>
               </DropdownItem>
               <DropdownItem key="settings">My Settings</DropdownItem>
               <DropdownItem key="team_settings">Team Settings</DropdownItem>
               <DropdownItem key="configurations">Configurations</DropdownItem>
-              <DropdownItem key="logout" color="danger">
+              <DropdownItem key="logout" color="danger" onClick={handleLogout}>
                 Log Out
               </DropdownItem>
             </DropdownMenu>
@@ -107,7 +150,7 @@ export default function Admin() {
           <TableColumn>Password</TableColumn>
         </TableHeader>
         <TableBody emptyContent="No rows to display.">
-          {users.map((user, index) => (
+          {data.users.map((user, index) => (
             <TableRow key={index}>
               <TableCell>{user.name}</TableCell>
               <TableCell>{user.last_name}</TableCell>
