@@ -11,12 +11,11 @@ export async function middleware(req: NextRequest) {
   try {
     const secret = new TextEncoder().encode(JWT_SECRET);
     const { payload } = await jwtVerify(token, secret);
-    const role = payload.role;
-
-    if (req.nextUrl.pathname.startsWith('/admin') && role !== 0) {
+    const role = payload.rol;
+    if (req.nextUrl.pathname.startsWith('/admin') && role !== "ADMIN" && role !== "MANAGER") {
         return NextResponse.redirect(new URL('/Login', req.url));
     }
-    if(req.nextUrl.pathname.startsWith('/HomeUser') && role !== 1){
+    if(req.nextUrl.pathname.startsWith('/HomeUser') && role !== "USER"){
         return NextResponse.redirect(new URL('/Login', req.url));
     }
     return NextResponse.next();

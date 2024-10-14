@@ -64,15 +64,15 @@ async function handleLogin(email: string, password: string) {
     const JWT_SECRET = process.env.JWT_SECRET || "SECRET";
     const token = jwt.sign(
       {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // Expira en 30 días
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
         id: userLogin.id,
         email: userLogin.email,
-        role: userLogin.rol,
+        rol: userLogin.role,
       },
       JWT_SECRET
     );
     const response = new NextResponse(
-      JSON.stringify({ message: "Login successful", success: true, rol:userLogin.rol }),
+      JSON.stringify({ message: "Login successful", success: true, rol:userLogin.role }),
       { status: 200 }
     );
     response.cookies.set("myToken", token, {
@@ -112,23 +112,43 @@ async function handleRegister(
         { status: 400 }
       );
     }
-
+    const userCount = await prisma.user.count();
     const hashedPassword = await bcrypt.hash(password, 10);
-    const nuevoUsuario = await prisma.user.create({
-      data: {
-        name,
-        last_name,
-        email,
-        password: hashedPassword,
-      },
-    });
-    return new NextResponse(
-      JSON.stringify({
-        message: "User created successfully",
-        success: true,
-        data: nuevoUsuario,
-      })
-    );
+    if (userCount === 0){
+      const nuevoUsuario = await prisma.user.create({
+        data: {
+          name,
+          last_name,
+          email,
+          password: hashedPassword,
+          role: "ADMIN"
+        },
+      });
+      return new NextResponse(
+        JSON.stringify({
+          message: "Admin created successfully",
+          success: true,
+          data: nuevoUsuario,
+        })
+      );
+    }else{
+      const nuevoUsuario = await prisma.user.create({
+        data: {
+          name,
+          last_name,
+          email,
+          password: hashedPassword,
+          role: "USER"
+        },
+      });
+      return new NextResponse(
+        JSON.stringify({
+          message: "User created successfully",
+          success: true,
+          data: nuevoUsuario,
+        })
+      );
+    }
   } catch (error) {
     return new NextResponse(
       JSON.stringify({ error: "Internal server error" }),
@@ -161,7 +181,6 @@ async function handleForgotPassword(email: string) {
       },
       JWT_SECRET
     );
-    //aca enviar el correo con token
     const resetLink = `http://localhost:3000/ForgotPassword?token=${token}`;
     const transporter = nodemailer.createTransport({
       service: "gmail",

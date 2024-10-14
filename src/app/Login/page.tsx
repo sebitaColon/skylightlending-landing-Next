@@ -82,10 +82,11 @@ export default function Login() {
       } else {
         toast.success(`Login successful`);
         loginReset();
-        if(result.rol === 1){
-          router.push("/HomeUser");
-        }else{
+        if(result.rol === "ADMIN" || result.rol === "MANAGER"){
           router.push("/admin");
+          console.log(result.rol);
+        }else{
+          router.push("/HomeUser");
         }
       }
     } catch (error) {

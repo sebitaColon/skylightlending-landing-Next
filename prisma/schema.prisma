@@ -13,5 +13,5 @@ model User {
   last_name String @db.VarChar(255)
   email     String @unique @db.VarChar(255)
   password  String @db.VarChar(255)
-  rol       Int    @default(1)
+  role      String @db.VarChar(255)
 }
