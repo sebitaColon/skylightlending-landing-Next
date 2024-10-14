@@ -18,16 +18,21 @@ import {
   Dropdown,
   DropdownMenu,
   Avatar,
+  User,
+  Button,
 } from "@nextui-org/react";
 import AcmeLogo from "../../assets/logo/logo.png";
 import Image from "next/image";
+import editIcon from "../../assets/iconEdit.svg"
+
 
 interface User {
+  id: number;
   name: string;
   last_name: string;
   email: string;
   password: string;
-  rol: number;
+  role: number;
 }
 
 interface AdminState {
@@ -135,20 +140,33 @@ export default function Admin() {
 
       <Table className="m-5 w-auto" aria-label="Users Table">
         <TableHeader>
-          <TableColumn>Name</TableColumn>
-          <TableColumn>Last Name</TableColumn>
-          <TableColumn>Email</TableColumn>
-          <TableColumn>Password</TableColumn>
-          <TableColumn>Rol</TableColumn>
+          <TableColumn>id</TableColumn>
+          <TableColumn>User</TableColumn>
+          <TableColumn>Role</TableColumn>
+          <TableColumn>Actions</TableColumn>
         </TableHeader>
         <TableBody emptyContent="No rows to display.">
           {data.users.map((user, index) => (
             <TableRow key={index}>
-              <TableCell>{user.name}</TableCell>
-              <TableCell>{user.last_name}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{user.password}</TableCell>
-              <TableCell>{user.rol === 1 ? "usuario":"admin"}</TableCell>
+              <TableCell>{user.id}</TableCell>
+              <TableCell>
+                <User
+                  name={`${user.name} ${user.last_name}`}
+                  description={user.email}
+                  avatarProps={{
+                    src: "",
+                  }}
+                />
+              </TableCell>       
+              <TableCell>{user.role}</TableCell>       
+              <TableCell>
+                {" "}
+                <div className="flex gap-2 items-center">
+                  <Button isIconOnly className="bg-yellow-500">
+                      <Image src={editIcon} alt="icon edit"></Image>
+                  </Button>
+                </div>
+              </TableCell>  
             </TableRow>
           ))}
         </TableBody>

@@ -12,11 +12,10 @@ import { gmailPassword } from "../../validation/gmailForgotPassword";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const router = useRouter();
-  //abrir modales
   const { isOpen, onOpen, onClose } = useDisclosure();
   function estado() {
     setState(true);
@@ -43,7 +42,6 @@ export default function Login() {
     handleSubmit: handleLoginSubmit,
     formState: { errors: loginErrors },
     reset: loginReset,
-
   } = useForm({
     resolver: yupResolver(loginValidation),
   });
@@ -82,10 +80,10 @@ export default function Login() {
       } else {
         toast.success(`Login successful`);
         loginReset();
-        if(result.rol === "ADMIN" || result.rol === "MANAGER"){
+        if (result.rol === "ADMIN" || result.rol === "MANAGER") {
           router.push("/admin");
           console.log(result.rol);
-        }else{
+        } else {
           router.push("/HomeUser");
         }
       }
