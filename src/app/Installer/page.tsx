@@ -24,7 +24,7 @@ function Installer() {
     resolver: yupResolver(schema),
   });
 
-  emailjs.init('016fb4rLiCkb73A46'); // Reemplaza con tu User ID
+  emailjs.init('016fb4rLiCkb73A46');
   
   const onSubmit = async (data: any) => {
 
@@ -39,7 +39,7 @@ function Installer() {
         website: data.website,
         references: data.references,
         message: 'Espero tu respuesta',
-      }); // Enviar directamente el objeto de datos
+      });
       console.log('Email enviado:', result.text);
       toast.success("Formulario enviado correctamente.");
       reset();

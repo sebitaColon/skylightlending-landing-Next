@@ -1,101 +1,15 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Spinner,
-  DropdownItem,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  Avatar,
-  User,
-  Button,
 } from "@nextui-org/react";
 import AcmeLogo from "../../assets/logo/logo.png";
 import Image from "next/image";
-import editIcon from "../../assets/iconEdit.svg"
-
-
-interface User {
-  id: number;
-  name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  role: number;
-}
-
-interface AdminState {
-  users: User[];
-  userAdmin: { id: number; email: string; role: number } | null;
-}
+import TableUsers from "@/components/UI/TableUsers";
+import AdminData from "@/components/UI/AdminData";
 
 export default function Admin() {
-  const [data, setData] = useState<AdminState>({ users: [], userAdmin: null });
-  const router = useRouter();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const resAdmin = await fetch("/api/logout", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const adminData = await resAdmin.json();
-        if (!adminData.success) {
-          router.push("/Login");
-          return;
-        }
-        const resUsers = await fetch("/api/user");
-        const usersData = await resUsers.json();
-
-        setData({ userAdmin: adminData.data, users: usersData });
-      } catch (error) {
-        console.error("Error fetching data", error);
-        router.push("/Login");
-      }
-    };
-
-    fetchData();
-  }, [router]);
-
-  const handleLogout = async () => {
-    try {
-      const response = await fetch("/api/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      if (data.success) {
-        router.push("/Login");
-      } else {
-        console.error("Logout failed");
-      }
-    } catch (error) {
-      console.error("An error occurred during logout", error);
-    }
-  };
-  if (!data) {
-    return (
-      <div className="flex gap-4 w-full h-screen justify-center items-center">
-        <Spinner label="Secondary" color="secondary" labelColor="secondary" />
-      </div>
-    );
-  }
   return (
     <div>
       <Navbar className="bg-blue-500">
@@ -108,69 +22,11 @@ export default function Admin() {
               SKYLENDING
           </NavbarItem>
         </NavbarContent>
-
         <NavbarContent as="div" justify="end">
-          <Dropdown placement="bottom">
-            <DropdownTrigger>
-              <Avatar
-                isBordered
-                as="button"
-                className="transition-transform"
-                color="primary"
-                name="Jason Hughes"
-                size="sm"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-              />
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem key="profile" className="h-14 gap-2">
-                <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">{data.userAdmin?.email || ""}</p>
-              </DropdownItem>
-              <DropdownItem key="settings">My Settings</DropdownItem>
-              <DropdownItem key="team_settings">Team Settings</DropdownItem>
-              <DropdownItem key="configurations">Configurations</DropdownItem>
-              <DropdownItem key="logout" color="danger" onClick={handleLogout}>
-                Log Out
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+            <AdminData/>
         </NavbarContent>
       </Navbar>
-
-      <Table className="m-5 w-auto" aria-label="Users Table">
-        <TableHeader>
-          <TableColumn>id</TableColumn>
-          <TableColumn>User</TableColumn>
-          <TableColumn>Role</TableColumn>
-          <TableColumn>Actions</TableColumn>
-        </TableHeader>
-        <TableBody emptyContent="No rows to display.">
-          {data.users.map((user, index) => (
-            <TableRow key={index}>
-              <TableCell>{user.id}</TableCell>
-              <TableCell>
-                <User
-                  name={`${user.name} ${user.last_name}`}
-                  description={user.email}
-                  avatarProps={{
-                    src: "",
-                  }}
-                />
-              </TableCell>       
-              <TableCell>{user.role}</TableCell>       
-              <TableCell>
-                {" "}
-                <div className="flex gap-2 items-center">
-                  <Button isIconOnly className="bg-yellow-500">
-                      <Image src={editIcon} alt="icon edit"></Image>
-                  </Button>
-                </div>
-              </TableCell>  
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <TableUsers/>
     </div>
   );
 }
