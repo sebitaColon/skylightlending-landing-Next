@@ -1,28 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-const JWT_SECRET = process.env.JWT_SECRET || "SECRET";
+import { verifyTokenUser } from "@/utils/verifyToken";
+
 export async function GET(req: NextRequest) {
   const token = req.cookies.get("myToken")?.value;
-  if (!token) {
-    return new NextResponse(
-      JSON.stringify({ message: "Not authenticated", success: false }),
-      { status: 401 }
-    );
-  }
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as {
-      id: number;
-      email: string;
-      role: number;
-    };
+    if (!token) {
+      return new NextResponse(
+        JSON.stringify({ message: "Not authenticated", success: false }),
+        { status: 401 }
+      );
+    }
+    const { valid, decoded } = await verifyTokenUser(token);
+    if (!valid) {
+      return NextResponse.redirect(new URL("/Login", req.url));
+    }
+    if (!decoded) {
+      return new NextResponse(
+        JSON.stringify({ message: "Failed to decode token", success: false }),
+        { status: 401 }
+      );
+    }
     return new NextResponse(
-      JSON.stringify({
-        message: "User data fetched",
-        success: true,
-        data: decoded,
-      }),
-      { status: 200 }
-    );
+    JSON.stringify({
+      message: "User data fetched",
+      success: true,
+      data: decoded,
+    }),
+    { status: 200 }
+  );
   } catch (error) {
     return new NextResponse(
       JSON.stringify({ message: "Invalid token", success: false }),
