@@ -71,6 +71,38 @@ export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
     }
   };
 
+  type UserField = "name" | "last_name" | "email";
+  interface InputField {
+    name: UserField;
+    label: string;
+    placeholder: string;
+    type: string;
+    autoFocus: boolean;
+  }
+  const inputFields: InputField[] = [
+    {
+      name: "name",
+      label: "Name",
+      placeholder: "Enter your name",
+      type: "text",
+      autoFocus: true,
+    },
+    {
+      name: "last_name",
+      label: "Last Name",
+      placeholder: "Enter your last name",
+      type: "text",
+      autoFocus: true,
+    },
+    {
+      name: "email",
+      label: "Email",
+      placeholder: "Enter your email",
+      type: "email",
+      autoFocus: true,
+    },
+  ];
+
   return (
     <>
       <Toaster position="bottom-center" />
@@ -84,41 +116,22 @@ export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
               onSubmit={handleSubmit(handleSave)}
               className="flex flex-col gap-y-4"
             >
-              <Controller
-                name="name"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    autoFocus
-                    label="Name"
-                    placeholder="Enter your name"
-                  />
-                )}
-              />
-              <Controller
-                name="last_name"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    label="Last Name"
-                    placeholder="Enter your last name"
-                  />
-                )}
-              />
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    label="Email"
-                    type="email"
-                    placeholder="Enter your email"
-                  />
-                )}
-              />
+              {inputFields.map((field, index) => (
+                <Controller
+                  key={index}
+                  name={field.name}
+                  control={control}
+                  render={({ field: inputField }) => (
+                    <Input
+                      {...inputField}
+                      label={field.label}
+                      placeholder={field.placeholder}
+                      type={field.type}
+                      autoFocus={field.autoFocus}
+                    />
+                  )}
+                />
+              ))}
               <Controller
                 name="role"
                 control={control}

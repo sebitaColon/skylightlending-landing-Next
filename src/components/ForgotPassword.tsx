@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { Input, Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
@@ -9,7 +8,7 @@ import { forgotPassword } from "@/validation/forgotPassword";
 import { useRouter } from "next/navigation";
 import { resetPasswordService } from "@/services/authService";
 
-export default function ResetPasswordForm() {
+export default function ForgotPassword() {
   const [emailToken, setEmail] = useState<string | null>(null);
   const router = useRouter();
 

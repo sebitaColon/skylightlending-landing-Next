@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import BackgrounImg from "../../assets/FondoFormInstaller.jpg";
-import ResetPasswordForm from "@/components/ResetPasswordForm";
+import ForgotPassword from "@/components/ForgotPassword";
 
 export default function ForgotPasswordPage() {
   return (
@@ -11,7 +11,7 @@ export default function ForgotPasswordPage() {
         className="fixed w-full h-[100vh] object-cover"
         alt=""
       />
-      <ResetPasswordForm />
+      <ForgotPassword />
     </div>
   );
 }

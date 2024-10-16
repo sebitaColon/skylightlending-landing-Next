@@ -13,6 +13,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { onForgotSubmitService, onLoginSubmitService, onRegisterSubmitService } from "@/services/userService";
 
 export default function Login() {
   const router = useRouter();
@@ -66,23 +67,14 @@ export default function Login() {
 
   const onLoginSubmit = async (data: any) => {
     try {
-      const requestData = { ...data, view: "login" };
-      const response = await fetch("./api/user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
-      });
-      const result = await response.json();
+      const result = await onLoginSubmitService(data);
       if (!result.success) {
         toast.error(`${result.message}`);
       } else {
-        toast.success(`Login successful`);
+        toast.success(`${result.message}`);
         loginReset();
         if (result.rol === "ADMIN" || result.rol === "MANAGER") {
           router.push("/admin");
-          console.log(result.rol);
         } else {
           router.push("/HomeUser");
         }
@@ -94,19 +86,11 @@ export default function Login() {
 
   const onRegisterSubmit = async (data: any) => {
     try {
-      const requestData = { ...data, view: "register" };
-      const response = await fetch("./api/user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
-      });
-      const result = await response.json();
+      const result = await onRegisterSubmitService(data);
       if (!result.success) {
         toast.error(`${result.message}`);
       } else {
-        toast.success(`Registro exitoso`);
+        toast.success(`${result.message}`);
         resetRegister();
       }
     } catch (error) {
@@ -116,16 +100,7 @@ export default function Login() {
 
   const onForgotSubmit = async (data: any) => {
     try {
-      const requestData = { ...data, view: "forgotPassword" };
-      const response = await fetch("./api/user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
-      });
-
-      const result = await response.json();
+      const result = await onForgotSubmitService(data)
       if (!result.success) {
         toast.error(`${result.message}`);
       } else {
