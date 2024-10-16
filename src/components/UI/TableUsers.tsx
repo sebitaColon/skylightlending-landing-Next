@@ -10,7 +10,6 @@ import {
   TableCell,
   User,
   Button,
-  Spinner,
 } from "@nextui-org/react";
 import Image from "next/image";
 import ModalEdit from "@/components/ModalEdit";
@@ -47,13 +46,11 @@ export default function TableUsers() {
         const usersData: User[] = await resUsers.json();
         setData({ users: usersData });
       } catch (error) {
-        console.error("Error fetching data", error);
         router.push("/Login");
       }
     };
-
     fetchData();
-  }, [router]);
+  }, [router, isModalOpen]);
   return (
     <>
       <Table className="m-5 w-auto" aria-label="Users Table">
