@@ -13,14 +13,14 @@ export async function handleLogin(email: string, password: string) {
         { status: 400 }
       );
     }
-    const userLogin = await prisma.user.findUnique({ where: { email } });
-    if (!userLogin) {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
       return new NextResponse(
         JSON.stringify({ message: "User not found", success: false }),
         { status: 404 }
       );
     }
-    const isPasswordValid = await bcrypt.compare(password, userLogin.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return new NextResponse(
         JSON.stringify({ message: "Incorrect password", success: false }),
@@ -31,9 +31,9 @@ export async function handleLogin(email: string, password: string) {
     const token = jwt.sign(
       {
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
-        id: userLogin.id,
-        email: userLogin.email,
-        rol: userLogin.role,
+        id: user.id,
+        email: user.email,
+        rol: user.role,
       },
       JWT_SECRET
     );
@@ -41,7 +41,7 @@ export async function handleLogin(email: string, password: string) {
       JSON.stringify({
         message: "Login successful",
         success: true,
-        rol: userLogin.role,
+        rol: user.role,
       }),
       { status: 200 }
     );

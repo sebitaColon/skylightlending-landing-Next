@@ -7,7 +7,7 @@ import {
   handleLogin,
   handleRegister,
   handleForgotPassword,
-} from "@/services/loginService";
+} from "@/app/api/functions/loginService";
 
 export async function GET() {
   try {
