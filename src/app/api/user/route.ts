@@ -11,7 +11,11 @@ import {
 
 export async function GET() {
   try {
-    const usuarios = await prisma.user.findMany();
+    const usuarios = await prisma.user.findMany({
+      orderBy:{
+        id: 'asc'
+      }
+    });
     return new NextResponse(JSON.stringify(usuarios), { status: 201 });
   } catch (e) {
     return new NextResponse(

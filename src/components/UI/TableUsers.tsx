@@ -31,6 +31,7 @@ export default function TableUsers() {
   const router = useRouter();
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userStatus, setUserStatus] = useState<boolean>();
 
   const handleEditClick = (user: User) => {
     setSelectedUser(user);
@@ -52,10 +53,11 @@ export default function TableUsers() {
       }
     };
     fetchData();
-  }, [router, isModalOpen, handleStatusUser]);
+  }, [router, isModalOpen, userStatus]);
 
   function handleStatusUser(estus: boolean, id:number){
     const estado = (!estus);
+    setUserStatus(!userStatus);
     updateState(estado,id)
   }
 
