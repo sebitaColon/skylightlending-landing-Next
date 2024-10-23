@@ -14,9 +14,8 @@ export default function Footer() {
         <div className="flex justify-center">
           <Image className="max-w-48" src={logoFooter} alt="logo-footer" />
         </div>
-
         <div className="w-full my-4">
-          <ul className="flex gap-2 justify-center md:justify-evenly">
+          <ul className="flex flex-col items-center sm:flex-row gap-2 justify-center md:justify-evenly">
             <li>
               <a href="#"></a>About Us
             </li>
