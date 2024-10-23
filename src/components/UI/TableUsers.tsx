@@ -14,6 +14,7 @@ import {
 import Image from "next/image";
 import ModalEdit from "@/components/ModalEdit";
 import EditIcon from "../../assets/iconEdit.svg";
+import { updateState } from "@/services/authService";
 
 interface User {
   id: number;
@@ -22,6 +23,7 @@ interface User {
   email: string;
   password: string;
   role: string;
+  status: boolean;
 }
 
 export default function TableUsers() {
@@ -50,7 +52,13 @@ export default function TableUsers() {
       }
     };
     fetchData();
-  }, [router, isModalOpen]);
+  }, [router, isModalOpen, handleStatusUser]);
+
+  function handleStatusUser(estus: boolean, id:number){
+    const estado = (!estus);
+    updateState(estado,id)
+  }
+
   return (
     <>
       <Table className="m-5 w-auto" aria-label="Users Table">
@@ -59,6 +67,7 @@ export default function TableUsers() {
           <TableColumn>User</TableColumn>
           <TableColumn>Role</TableColumn>
           <TableColumn>Actions</TableColumn>
+          <TableColumn>Active</TableColumn>
         </TableHeader>
         <TableBody emptyContent="No rows to display.">
           {data.users.map((user, index) => (
@@ -84,6 +93,13 @@ export default function TableUsers() {
                     <Image src={EditIcon} alt={"Edit Icon"}></Image>
                   </Button>
                 </div>
+              </TableCell>
+              <TableCell>
+                  <Button onClick={() => handleStatusUser(user.status,user.id)
+                  } color={user.status? 'success':'danger'
+                  }variant="flat">
+                    {`${user.status}`}
+                    </Button>
               </TableCell>
             </TableRow>
           ))}

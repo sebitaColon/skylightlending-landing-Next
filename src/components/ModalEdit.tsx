@@ -51,12 +51,13 @@ export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
 
   const handleSave = async (data: any) => {
     try {
+      const action = "updateRole"
       const response = await fetch(`./api/edit/${user.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({...data, action}),
       });
       const result = await response.json();
       if (!result.success) {

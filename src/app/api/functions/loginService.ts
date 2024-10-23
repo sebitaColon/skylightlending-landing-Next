@@ -20,6 +20,12 @@ export async function handleLogin(email: string, password: string) {
         { status: 404 }
       );
     }
+    if (user.status === false) {
+      return new NextResponse(
+        JSON.stringify({ message: "Account suspended", success: false }),
+        { status: 404 }
+      );
+    }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return new NextResponse(
@@ -168,3 +174,5 @@ export async function handleForgotPassword(email: string) {
     );
   }
 }
+
+
