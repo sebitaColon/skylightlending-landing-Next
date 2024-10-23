@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, Spinner } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { forgotPassword } from "@/validation/forgotPassword";
 import { useRouter } from "next/navigation";
-import { resetPasswordService } from "@/services/authService";
+import { resetPasswordService } from "./serviceForgotPassword";
 
 export default function ForgotPassword() {
   const [emailToken, setEmail] = useState<string | null>(null);
@@ -15,10 +15,12 @@ export default function ForgotPassword() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
-    if (token) {
+    if (!token) {
+      router.push('/Login')
+    }else{
       setEmail(token);
     }
-  }, []);
+  }, [router]);
 
   const {
     register: resetPassword,
@@ -40,6 +42,15 @@ export default function ForgotPassword() {
       console.error("Error:", error);
     }
   };
+
+  if(!emailToken){
+    return (
+      <div className="flex gap-4 w-full h-screen justify-end items-center">
+        <Spinner color="default" />
+      </div>
+    )
+  }
+
 
   return (
     <form

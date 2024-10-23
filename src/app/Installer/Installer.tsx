@@ -3,7 +3,7 @@ import React from "react";
 import { Input, Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
-import schema from "../validation/installerSchema";
+import schema from "@/validation/installerSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import emailjs from "emailjs-com";
 

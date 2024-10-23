@@ -2,8 +2,8 @@
 import { Input, Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { gmailPassword } from "../validation/gmailForgotPassword";
-import { onForgotSubmitService } from "@/services/userService";
+import { gmailPassword } from "@/validation/gmailForgotPassword";
+import { onForgotSubmitService } from "../services/serviceForgotPasswordLogin";
 
 interface ForgotFormProps {
   onToast: (message: string, type: "success" | "error") => void;

@@ -12,7 +12,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import Image from "next/image";
-import ModalEdit from "@/components/ModalEdit";
+import ModalEdit from "@/app/admin/ModalEdit";
 import EditIcon from "../../assets/iconEdit.svg";
 import { updateState } from "@/services/authService";
 

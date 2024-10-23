@@ -2,8 +2,8 @@
 import { Input, Button, Link } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { loginValidation } from "../validation/loginValidation";
-import { onLoginSubmitService } from "@/services/userService";
+import { loginValidation } from "@/validation/loginValidation";
+import { onLoginSubmitService } from "../services/serviceLogin";
 import { useRouter } from "next/navigation";
 
 interface LoginFormProps {

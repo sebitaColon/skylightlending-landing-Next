@@ -6,8 +6,8 @@ import {
 } from "@nextui-org/react";
 import AcmeLogo from "../../assets/logo/logo.png";
 import Image from "next/image";
-import TableUsers from "@/components/UI/TableUsers";
-import AdminData from "@/components/UI/AdminData";
+import TableUsers from "./TableUsers";
+import AdminData from "./AdminData";
 
 export default function Admin() {
   return (

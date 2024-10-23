@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import BackgrounImg from "../../assets/FondoFormInstaller.jpg";
-import ForgotPassword from "@/components/ForgotPassword";
+import ForgotPassword from "@/app/ForgotPassword/ForgotPassword";
 
 export default function ForgotPasswordPage() {
   return (

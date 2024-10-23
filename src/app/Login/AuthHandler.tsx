@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { Button, useDisclosure } from "@nextui-org/react";
 import { Link } from "@nextui-org/react";
-import ForgotPasswordFromLogin from "@/components/ForgotPasswordFromLogin";
-import RegisterForm from "@/components/RegisterForm";
-import LoginForm from "@/components/LoginForm";
-import { ModalLogin } from "./Modal";
+import ForgotPasswordFromLogin from "./Forms/ForgotPasswordFromLogin";
+import RegisterForm from "./Forms/RegisterForm";
+import LoginForm from "./Forms/LoginForm";
+import { ModalLogin } from "@/components/Modal";
 import toast, { Toaster } from "react-hot-toast";
 
 const AuthHandler = () => {

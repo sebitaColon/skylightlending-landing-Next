@@ -2,7 +2,7 @@ import Layout from "../../components/Layout";
 import BackgrounImg from "../../assets/FondoFormInstaller.jpg";
 import { Button } from "@nextui-org/react";
 import Image from "next/image";
-import AuthHandler from "@/components/AuthHandler";
+import AuthHandler from "./AuthHandler";
 
 export default function Login() {
   return (

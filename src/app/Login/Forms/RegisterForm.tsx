@@ -2,8 +2,8 @@
 import { Input, Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { registerValidation } from "../validation/resgisterValidation";
-import { onRegisterSubmitService } from "@/services/userService";
+import { registerValidation } from "@/validation/resgisterValidation";
+import { onRegisterSubmitService } from "../services/serviceRegister";
 
 interface RegisterFormProps {
   onToast: (message: string, type: "success" | "error") => void;

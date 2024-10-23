@@ -9,7 +9,7 @@ import {
   DropdownMenu,
   Avatar,
 } from "@nextui-org/react";
-import { logoutUser, fetchUserData } from "../../services/authService";
+import { logoutUser, fetchUserData } from "@/services/authService";
 
 interface UserAdmin {
   id: number;
