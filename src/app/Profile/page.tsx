@@ -1,10 +1,11 @@
 import React from 'react'
 import Image from 'next/image'
-import { Avatar, Button} from '@nextui-org/react'
-import iconEdit from '@/assets/iconEdit.svg'
+import { Avatar, Button, Input} from '@nextui-org/react'
 import imageProtada from '@/assets/img-body-contactus.jpg'
 import imageCamera from '@/assets/imageCamera.svg'
 import ButtonBack from '@/components/UI/ButtonBack'
+import ProfileFrom from './ProfileFrom'
+import ProfileFromImage from './ProfileFromImage'
 
 export default function page() {
 
@@ -17,18 +18,11 @@ export default function page() {
           <h1 className=' text-3xl mb-10 text-white' style={{fontFamily : 'fantasy'}}>to my profile</h1>        
         <div className='h-auto w-full flex flex-col items-center justify-center '>
           <div className='w-auto h-auto relative mb-6'>
-            <Button className='min-w-8 min-h-8 p-1 w-auto h-auto bg-blue-500 rounded-full absolute -bottom-2 z-10 -right-2 lg:w-12 lg:h-12'>
-                <Image src={imageCamera} alt='imagenCamera' className=''></Image>
-            </Button>
+            <ProfileFromImage/>
             <Avatar src="https://i.pravatar.cc/150?u=a04258114e29026708c" isBordered color='primary' className="w-20 h-20 text-large lg:w-36 lg:h-36 " />
           </div>
           <div className='w-auto h-auto flex justify-center flex-col text-white '>
-            <div className='w-full h-auto flex justify-between'>
-              <span className='text-xl'>Juan Garcia</span>
-              <Button className='bg-transparent min-h-5 min-w-5 w-auto h-auto p-0'>
-                <Image alt='imgStatus' src={iconEdit} className='w-5 h-5 '></Image>
-              </Button>
-            </div>
+            <ProfileFrom/>
             <span className='text-sm text-gray-400'>sebita03082003@gmail.com</span>
           </div>
         </div>
