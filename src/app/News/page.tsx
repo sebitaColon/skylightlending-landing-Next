@@ -23,16 +23,16 @@ export default function News() {
                 className="w-full transition-all delay-200 hover:scale-110"
               />
             </div>
-            <div className="bg-white h-full p-5 flex flex-col justify-center md:h-auto md:pl-5">
-              <Link className="text-black">
+            <div className="bg-white h-full p-5 flex flex-col justify-center md:h-auto md:pl-5 dark:bg-black">
+              <Link className="text-black dark:text-white">
                 Announcement, Funding
                 <li className="ml-2">5/28/19 </li>
               </Link>
-              <Link className="text-3xl py-4 text-black">
+              <Link className="text-3xl py-4 text-black dark:text-white">
                 Skylight Lending Secures Large Credit Facility with M&T Bank to
                 Fuel Expansion
               </Link>
-              <Link underline="always">Read More</Link>
+              <Link className="dark:text-white" underline="always">Read More</Link>
             </div>
           </div>
 
@@ -44,16 +44,16 @@ export default function News() {
                 className=" w-full transition-all delay-200 hover:scale-110"
               />
             </div>
-            <div className="bg-white h-full p-5 flex flex-col justify-center md:h-auto md:pl-5">
-              <Link className="text-black">
+            <div className="bg-white h-full p-5 flex flex-col justify-center md:h-auto md:pl-5 dark:bg-black">
+              <Link className="text-black dark:text-white">
                 Partnership
                 <li className="ml-2">5/28/19 </li>
               </Link>
-              <Link className="text-3xl py-4 text-black">
+              <Link className="text-3xl py-4 text-black dark:text-white">
                 Skylight Lending and Fortress Power Partner to Offer Energy
                 Storage with Financing
               </Link>
-              <Link underline="always">Read More</Link>
+              <Link className="dark:text-white" underline="always">Read More</Link>
             </div>
           </div>
         </div>

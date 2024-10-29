@@ -13,7 +13,7 @@ function OurStory() {
           alt="imgBodyContatUs"
         />
         <div className=" text-white absolute text-center pt-60">
-          <p className="pb-10 text-4xl">Our Story</p>
+          <p className="pb-10 text-4xl text-blueFooter">Our Story</p>
           <h3 className="bg-gray-500 bg-opacity-50 w-full px-10 py-4 mt-10 md:mt-28 lg:mt-40] text-justify">
             Our company maintains a straight-forward vision, Let’s Enable the
             Change we want to see in the World. From there we have framed our

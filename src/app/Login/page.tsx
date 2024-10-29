@@ -141,6 +141,7 @@ export default function Login() {
                     <h1>Email Address</h1>
                     <Link
                       color="primary"
+                      className="dark:text-white"
                       href="#"
                       onClick={handleRegister}
                       size="sm"
@@ -157,6 +158,7 @@ export default function Login() {
                     <h1>Password</h1>
                     <Link
                       color="primary"
+                      className="dark:text-white"
                       href="#"
                       onClick={handleForgotPassword}
                       size="sm"
@@ -185,11 +187,11 @@ export default function Login() {
               </form>
             </div>
           )}
-          <div className="flex flex-col justify-center items-center mt-3 p-5 sm:flex-row sm:justify-between">
+          <div className="flex flex-col justify-center items-center mt-3 p-5 md:flex-row md:justify-between">
             <h1>© 2024 Skylight Lending, LLC</h1>
-            <div className="cursor-pointer">
-              <Link onClick={estado}>Privacy Policy</Link> |{" "}
-              <Link onClick={estado2}>Terms of Service</Link>
+            <div className="cursor-pointer ">
+              <Link className="dark:text-white" onClick={estado}>Privacy Policy</Link> |{" "}
+              <Link className="dark:text-white" onClick={estado2}>Terms of Service</Link>
             </div>
           </div>
         </div>
