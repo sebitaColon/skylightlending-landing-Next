@@ -9,9 +9,10 @@ import {
   Button,
   Input,
 } from "@nextui-org/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
+import { updateUser } from "./serviceAdmin";
 
 interface User {
   id: number;
@@ -28,6 +29,7 @@ interface ModalEditProps {
 }
 
 export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
+  const [id, setId ] = useState(user.id)
   const {
     handleSubmit,
     control,
@@ -43,6 +45,7 @@ export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
   });
 
   useEffect(() => {
+    setId(user.id)
     setValue("name", user.name);
     setValue("last_name", user.last_name);
     setValue("email", user.email);
@@ -51,24 +54,15 @@ export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
 
   const handleSave = async (data: any) => {
     try {
-      const action = "updateRole"
-      const response = await fetch(`./api/edit/${user.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({...data, action}),
-      });
-      const result = await response.json();
+      const result = await updateUser({...data, id});
       if (!result.success) {
         toast.error(`${result.message}`);
       } else {
-        toast.error(`User updated`);
+        toast.success(`User updated`);
         onClose();
       }
     } catch (error) {
       console.error("Error al actualizar el usuario:", error);
-      alert("Error al actualizar el usuario");
     }
   };
 
@@ -106,7 +100,6 @@ export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
 
   return (
     <>
-      <Toaster position="bottom-center" />
       <Modal isOpen={isOpen} onOpenChange={onClose} placement="top-center">
         <ModalContent>
           <ModalHeader className="flex flex-col items-center gap-1">

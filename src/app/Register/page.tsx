@@ -1,9 +1,9 @@
-import { Button } from '@nextui-org/react'
+import Layout from '@/components/Layout'
 import React from 'react'
-import ForgotPassword from './ForgotPassword'
-import Layout from "@/components/Layout";
 import Image from 'next/image'
 import BackgrounImg from "@/assets/FondoFormInstaller.jpg";
+import RegisterForm from './RegisterForm';
+import { Button } from '@nextui-org/react';
 import volver from '@/assets/volver.svg'
 
 export default function page() {
@@ -19,7 +19,7 @@ export default function page() {
                     className={`w-full h-auto p-5 bg-background text-foreground mt-40 mb-20 rounded-3xl flex flex-col justify-start sm:w-4/5 md:max-w-5xl xl:mt-52 `}
                 >
                     <div className="w-full flex items-center mb-5 justify-between">
-                        <a
+                    <a
                             className="w-10 rounded-3xl min-w-none bg-blue-600 shadow-lg"
                             color="primary"
                             href='/Login'
@@ -33,7 +33,7 @@ export default function page() {
                             </Button>
                         </div>
                     </div>
-                    <ForgotPassword />
+                    <RegisterForm />
                 </div>
             </div>
         </Layout>

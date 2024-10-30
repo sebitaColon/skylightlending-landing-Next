@@ -2,7 +2,7 @@ import Layout from "../../components/Layout";
 import BackgrounImg from "../../assets/FondoFormInstaller.jpg";
 import { Button } from "@nextui-org/react";
 import Image from "next/image";
-import AuthHandler from "./AuthHandler";
+import LoginForm from "./LoginForm";
 
 export default function Login() {
   return (
@@ -22,7 +22,7 @@ export default function Login() {
               Get in touch
             </Button>
           </div>
-          <AuthHandler />
+          <LoginForm/>
         </div>
       </div>
     </Layout>

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { Epilogue } from "next/font/google";
 const prisma = new PrismaClient();
+
 
 export async function PUT(
   req: NextRequest,
@@ -18,10 +18,8 @@ export async function PUT(
   switch(action){
     case "updateState":
      return await handleState(id, estado);
-     break;
-     case "updateRole":
-      return await handleRole(id, name, last_name, email, role);
-    break;
+     case "updateUser":
+      return await handleUser(id, name, last_name, email, role);
   }
 }
 
@@ -29,7 +27,7 @@ export async function handleState(id:Number, estado:boolean) {
   const updatedUser = await prisma.user.update({
     where: { id: Number(id) },
     data: {
-      status:estado,
+      isActive:estado,
     },
     
   });
@@ -43,12 +41,7 @@ export async function handleState(id:Number, estado:boolean) {
   );
 }
 
-
-
-
-
-
-export async function handleRole(id:number, name: string,
+export async function handleUser(id:number, name: string,
   last_name: string,
   email: string,
   role: string)

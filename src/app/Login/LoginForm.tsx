@@ -1,22 +1,27 @@
 "use client";
-import { Input, Button, Link } from "@nextui-org/react";
+import { Input, Button, Link, useDisclosure } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginValidation } from "@/validation/loginValidation";
-import { onLoginSubmitService } from "../services/serviceLogin";
+import { onLoginSubmitService } from "./loginService";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import ModalLogin from "@/components/Modal";
+import { useState } from "react";
 
-interface LoginFormProps {
-  onRegister: () => void;
-  onForgotPassword: () => void;
-  onToast: (message: string, type: "success" | "error") => void;
-}
+export default function LoginForm() {
 
-export default function LoginForm({
-  onRegister,
-  onForgotPassword,
-  onToast,
-}: LoginFormProps) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [state, setState] = useState(false);
+  function estado() {
+    setState(true);
+    onOpen();
+  }
+  function estado2() {
+    setState(false);
+    onOpen();
+  }
+
   const router = useRouter();
   const {
     register: loginRegister,
@@ -31,9 +36,9 @@ export default function LoginForm({
     try {
       const result = await onLoginSubmitService(data);
       if (!result.success) {
-        onToast(result.message, "error");
+        toast.error(result.message);
       } else {
-        onToast(result.message, "success");
+        toast.success(result.message);
         loginReset();
         router.push(
           result.rol === "ADMIN" || result.rol === "MANAGER"
@@ -59,7 +64,7 @@ export default function LoginForm({
         <div id="Login" className=" w-full">
           <div className="flex pt-10 py-2 px-1 justify-between">
             <h1>Email Address</h1>
-            <Link color="primary" href="#" onPress={onRegister} size="sm">
+            <Link color="primary" href="/Register"  size="sm">
               Create Account
             </Link>
           </div>
@@ -76,7 +81,7 @@ export default function LoginForm({
           )}
           <div className="flex pt-10 py-2 px-1 justify-between">
             <h1>Password</h1>
-            <Link color="primary" href="#" onPress={onForgotPassword} size="sm">
+            <Link color="primary" href="/ForgotPassword" size="sm">
               Forgot password?
             </Link>
           </div>
@@ -104,6 +109,14 @@ export default function LoginForm({
           </div>
         </div>
       </form>
+      <div className="flex flex-col justify-center items-center mt-3 p-5 sm:flex-row sm:justify-between">
+        <h1>© 2024 Skylight Lending, LLC</h1>
+        <div className="cursor-pointer">
+          <Link onPress={estado}>Privacy Policy</Link> |{" "}
+          <Link onPress={estado2}>Terms of Service</Link>
+        </div>
+      </div>
+      <ModalLogin isOpen={isOpen} onClose={onClose} state={state} />
     </>
   );
 }

@@ -12,9 +12,9 @@ import {
   Button,
 } from "@nextui-org/react";
 import Image from "next/image";
-import ModalEdit from "@/app/admin/ModalEdit";
-import EditIcon from "../../assets/iconEdit.svg";
-import { updateState } from "@/services/authService";
+import ModalEdit from "../app/admin/ModalEdit";
+import EditIcon from "@/assets/iconEdit.svg";
+import { updateState } from "../app/admin/serviceAdmin";
 
 interface User {
   id: number;
@@ -23,7 +23,7 @@ interface User {
   email: string;
   password: string;
   role: string;
-  status: boolean;
+  isActive: boolean;
 }
 
 export default function TableUsers() {
@@ -97,10 +97,10 @@ export default function TableUsers() {
                 </div>
               </TableCell>
               <TableCell>
-                  <Button onClick={() => handleStatusUser(user.status,user.id)
-                  } color={user.status? 'success':'danger'
+                  <Button onClick={() => handleStatusUser(user.isActive,user.id)
+                  } color={user.isActive? 'success':'danger'
                   }variant="flat">
-                    {`${user.status}`}
+                    {`${user.isActive}`}
                     </Button>
               </TableCell>
             </TableRow>

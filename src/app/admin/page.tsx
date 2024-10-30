@@ -6,7 +6,7 @@ import {
 } from "@nextui-org/react";
 import AcmeLogo from "../../assets/logo/logo.png";
 import Image from "next/image";
-import TableUsers from "./TableUsers";
+import TableUsers from "../../components/TableUsers";
 import AdminData from "./AdminData";
 
 export default function Admin() {

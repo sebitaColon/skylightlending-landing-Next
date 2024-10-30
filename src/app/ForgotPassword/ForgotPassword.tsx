@@ -1,109 +1,91 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Input, Button, Spinner } from "@nextui-org/react";
+import { Input, Button, Link, useDisclosure } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { forgotPassword } from "@/validation/forgotPassword";
-import { useRouter } from "next/navigation";
-import { resetPasswordService } from "./serviceForgotPassword";
+import { gmailPassword } from "@/validation/gmailForgotPassword";
+import { onForgotSubmitService } from "./ForgotPasswordService";
+import toast from "react-hot-toast";
+import ModalLogin from "@/components/Modal";
+import { useState } from "react";
 
 export default function ForgotPassword() {
-  const [emailToken, setEmail] = useState<string | null>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
-    if (!token) {
-      router.push('/Login')
-    }else{
-      setEmail(token);
-    }
-  }, [router]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [state, setState] = useState(false);
+  function estado() {
+    setState(true);
+    onOpen();
+  }
+  function estado2() {
+    setState(false);
+    onOpen();
+  }
 
   const {
-    register: resetPassword,
-    handleSubmit: resetPasswordSubmit,
-    formState: { errors: passwordErrors },
+    register: forgotPassword,
+    handleSubmit: handleForgotSubmit,
+    formState: { errors: forgotErrors },
+    reset: forgotPasswordReset,
   } = useForm({
-    resolver: yupResolver(forgotPassword),
+    resolver: yupResolver(gmailPassword),
   });
 
-  const onResetPassword = async (data: any) => {
+  const onForgotSubmit = async (data: any) => {
     try {
-      const result = await resetPasswordService(data, emailToken);
+      const result = await onForgotSubmitService(data);
       if (!result.success) {
-        toast.error(`${result.message}`);
+        toast.error(result.message);
       } else {
-        router.push("/Login");
+        toast.success("Check your gmail");
+        forgotPasswordReset();
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  if(!emailToken){
-    return (
-      <div className="flex gap-4 w-full h-screen justify-end items-center">
-        <Spinner color="default" />
-      </div>
-    )
-  }
-
-
   return (
-    <form
-      onSubmit={resetPasswordSubmit(onResetPassword)}
-      className="w-full max-w-[800px] h-auto absolute bg-white rounded-2xl pb-10"
-    >
-      <Toaster position="bottom-center" />
-      <h1 className="font-InterBold text-center text-black text-md sm:text-3xl pt-10 pb-10 mb-5 border-b-1">
-        <span className="text-blue-600 pr-2">Forgot</span>
-        Password
-      </h1>
-      <div className="w-full h-auto px-10">
-        <h1 className="pt-2 pl-1">Password</h1>
+    <>
+      <h1 className="text-blue-500 mb-5 text-center font-InterBold sm:text-3xl">FORGOT PASSWORD</h1>
+      <form
+        onSubmit={handleForgotSubmit(onForgotSubmit)}
+        className="gap-0 w-full"
+      >
+        <h1 className="pt-2 pl-1">Forgot Password</h1>
         <Input
           autoFocus
+          placeholder="Enter your email"
           variant="underlined"
-          type="password"
-          placeholder="........."
-          {...resetPassword("password", {
+          {...forgotPassword("email", {
             required: true,
           })}
         />
-        {passwordErrors.password && (
-          <p className="text-red-500">{passwordErrors.password.message}</p>
+        {forgotErrors.email && (
+          <p className="text-red-500">{forgotErrors.email.message}</p>
         )}
-
-        <h1 className="pt-2 pl-1">Confirm Password</h1>
-        <Input
-          type="password"
-          autoFocus
-          variant="underlined"
-          placeholder="........."
-          {...resetPassword("confirmPassword", {
-            required: true,
-          })}
-        />
-        {passwordErrors.confirmPassword && (
-          <p className="text-red-500">
-            {passwordErrors.confirmPassword.message}
-          </p>
-        )}
+        <p className="pt-4">
+          {" "}
+          Please enter your email address to reset your password.
+        </p>
+        <div className="w-full flex justify-center">
+          <Button
+            className="mt-10 w-full sm:max-w-xl"
+            radius="full"
+            color="primary"
+            variant="shadow"
+            type="submit"
+          >
+            Send reset code
+          </Button>
+        </div>
+      </form>
+      <div className="flex flex-col justify-center items-center mt-3 p-5 sm:flex-row sm:justify-between">
+        <h1>© 2024 Skylight Lending, LLC</h1>
+        <div className="cursor-pointer">
+          <Link onPress={estado}>Privacy Policy</Link> |{" "}
+          <Link onPress={estado2}>Terms of Service</Link>
+        </div>
       </div>
-      <div className="w-full flex justify-center">
-        <Button
-          className="mt-10 w-11/12 sm:max-w-xl"
-          radius="full"
-          color="primary"
-          variant="shadow"
-          type="submit"
-        >
-          Reset Password
-        </Button>
-      </div>
-    </form>
+      <ModalLogin isOpen={isOpen} onClose={onClose} state={state} />
+    </>
   );
 }

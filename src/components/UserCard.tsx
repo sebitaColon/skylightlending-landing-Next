@@ -8,7 +8,8 @@ import {
   Image,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { fetchUserData, logoutUser } from "../services/authService";
+import { fetchUserData, logoutUser } from "@/app/HomeUser/serviceHomeUser";
+import Cookies from 'js-cookie';
 
 const UserCard = () => {
   const [loading, setLoading] = useState(false);
@@ -17,6 +18,7 @@ const UserCard = () => {
     email: string;
     rol: string;
   } | null>(null);
+
   const router = useRouter();
   useEffect(() => {
     const getUserData = async () => {

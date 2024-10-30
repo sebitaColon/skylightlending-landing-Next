@@ -9,7 +9,7 @@ import {
   DropdownMenu,
   Avatar,
 } from "@nextui-org/react";
-import { logoutUser, fetchUserData } from "@/services/authService";
+import { fetchAdminData, logoutAdmin } from "./serviceAdmin";
 
 interface UserAdmin {
   id: number;
@@ -28,8 +28,7 @@ export default function AdminData() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const adminData = await fetchUserData();
-        console.log(adminData); 
+        const adminData = await fetchAdminData();
         if (!adminData.success) {
           router.push("/Login");
           return;
@@ -46,14 +45,12 @@ export default function AdminData() {
 
   const handleLogout = async () => {
     try {
-      const data = await logoutUser();
-      if (data.success) {
+      const logout = await logoutAdmin();
+      if (logout.success) {
         router.push("/Login");
-      } else {
-        console.error("Logout failed");
       }
     } catch (error) {
-      console.error("An error occurred during logout", error);
+      console.error("erro logout", error);
     }
   };
 
