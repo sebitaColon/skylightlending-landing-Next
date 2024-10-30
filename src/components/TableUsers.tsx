@@ -15,6 +15,7 @@ import Image from "next/image";
 import ModalEdit from "../app/admin/ModalEdit";
 import EditIcon from "@/assets/iconEdit.svg";
 import { updateState } from "../app/admin/serviceAdmin";
+import toast from "react-hot-toast";
 
 interface User {
   id: number;
@@ -55,10 +56,15 @@ export default function TableUsers() {
     fetchData();
   }, [router, isModalOpen, userStatus]);
 
-  function handleStatusUser(estus: boolean, id:number){
-    const estado = (!estus);
+  const handleStatusUser = async (status: boolean, id:number) => {
+    const estado = (!status);
     setUserStatus(!userStatus);
-    updateState(estado,id)
+    const result = await updateState(estado,id)
+    if(!result.success) {
+      toast.error(`${result.message}`);
+    } else {
+      toast.success(`${result.message}`);
+    }
   }
 
   return (

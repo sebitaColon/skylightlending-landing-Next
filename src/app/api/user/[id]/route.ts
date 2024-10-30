@@ -24,21 +24,30 @@ export async function PUT(
 }
 
 export async function handleState(id:Number, estado:boolean) {
-  const updatedUser = await prisma.user.update({
-    where: { id: Number(id) },
-    data: {
-      isActive:estado,
-    },
-    
-  });
-  return new NextResponse(
-    JSON.stringify({
-      message: "estado update successfully",
-      success: true,
-      data: updatedUser,
-      status: 200,
-    })
-  );
+  try{
+
+    const updatedUser = await prisma.user.update({
+      where: { id: Number(id) },
+      data: {
+        isActive:estado,
+      },
+      
+    });
+    return new NextResponse(
+      JSON.stringify({
+        message: "update successfully",
+        success: true,
+        data: updatedUser,
+        status: 200,
+      })
+    );
+  } catch (error) {
+    return NextResponse.json({
+      message: "do not updated",
+      success: false,
+      status: 500,
+    });
+  }
 }
 
 export async function handleUser(id:number, name: string,

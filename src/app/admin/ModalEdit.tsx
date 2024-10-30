@@ -11,7 +11,7 @@ import {
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { updateUser } from "./serviceAdmin";
 
 interface User {

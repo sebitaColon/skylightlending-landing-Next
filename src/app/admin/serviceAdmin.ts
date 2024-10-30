@@ -9,7 +9,7 @@ export const updateState = async (estado: boolean,
       body: JSON.stringify({estado, action}),
     });
     if (!response.ok) {
-      throw new Error('Failed to fetch user data');
+      throw new Error('Failed in update user');
     }
     return await response.json();
 };
@@ -24,7 +24,7 @@ export const updateUser = async ({...data}) => {
     body: JSON.stringify({...data, action}),
   });
   if (!response.ok) {
-    throw new Error('Failed to fetch user data');
+    throw new Error('Failed in update user data');
   }
   return await response.json();
 };

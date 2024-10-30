@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Input, Button, Spinner } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { forgotPassword } from "@/validation/forgotPassword";
 import { useRouter } from "next/navigation";
@@ -57,7 +57,6 @@ export default function ResetPassword() {
       onSubmit={resetPasswordSubmit(onResetPassword)}
       className="w-full max-w-[800px] h-auto absolute bg-white rounded-2xl pb-10"
     >
-      <Toaster position="bottom-center" />
       <h1 className="font-InterBold text-center text-black text-md sm:text-3xl pt-10 pb-10 mb-5 border-b-1">
         <span className="text-blue-600 pr-2">Forgot</span>
         Password
