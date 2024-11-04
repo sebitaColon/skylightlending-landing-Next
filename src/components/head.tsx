@@ -13,7 +13,7 @@ export default function Head() {
       <div className="flex justify-center items-center bg-blue-600 opacity-50 absolute inset-0 z-10"></div>
 
       <div className="absolute inset-0 flex flex-col justify-center items-center z-20 text-center">
-        <h2 className="text-white font-lato text-3xl">
+        <h2 className="text-white dark:text-black font-lato text-3xl">
           Environmentally Focused.
           <br />
           Purposeful Lending.
