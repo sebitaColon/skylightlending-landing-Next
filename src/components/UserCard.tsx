@@ -8,7 +8,7 @@ import {
   Image,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { fetchUserData, logoutUser } from "@/app/HomeUser/serviceHomeUser";
+import { fetchUserData } from "@/app/HomeUser/serviceHomeUser";
 import Cookies from 'js-cookie';
 
 const UserCard = () => {
@@ -16,7 +16,7 @@ const UserCard = () => {
   const [user, setUser] = useState<{
     id: number;
     email: string;
-    rol: string;
+    role: string;
   } | null>(null);
 
   const router = useRouter();
@@ -34,18 +34,10 @@ const UserCard = () => {
   }, [router]);
 
   const handleLogout = async () => {
-    setLoading(true);
-    try {
-      const data = await logoutUser();
-      if (data.success) {
-        router.push("/Login");
-      } else {
-        console.error("Logout failed");
-      }
-    } catch (error) {
-      console.error("An error occurred during logout", error);
-    } finally {
-      setLoading(false);
+    Cookies.remove('myToken');
+    const cookieEliminada = Cookies.get('myToken');
+    if (!cookieEliminada) {
+      router.push('/Login')
     }
   };
 
@@ -54,7 +46,7 @@ const UserCard = () => {
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-center">
         <p className="text-tiny uppercase font-bold">Welcome</p>
         <h4 className="font-bold text-large">{user?.email}</h4>
-        <small className="text-default-500">{user?.rol}</small>
+        <small className="text-default-500">{user?.role}</small>
       </CardHeader>
       <CardBody className="overflow-visible py-2">
         <Image

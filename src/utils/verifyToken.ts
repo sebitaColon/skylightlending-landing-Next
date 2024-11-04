@@ -4,7 +4,7 @@ const secretKey = new TextEncoder().encode(process.env.JWT_SECRET || "SECRET");
 export async function verifyToken(token: string){
   try {
     const { payload } = await jwtVerify(token, secretKey);
-    return { valid: true, role: payload.rol as string };
+    return { valid: true, role: payload.role as string };
   } catch (error) {
     console.error("Invalid token:", error);
     return { valid: false };

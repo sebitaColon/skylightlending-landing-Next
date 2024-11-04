@@ -38,7 +38,7 @@ export async function handleLogin(email: string, password: string) {
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
         id: user.id,
         email: user.email,
-        rol: user.role,
+        role: user.role,
       },
       JWT_SECRET
     );
@@ -46,12 +46,11 @@ export async function handleLogin(email: string, password: string) {
       JSON.stringify({
         message: "Login successful",
         success: true,
-        rol: user.role,
+        role: user.role,
       }),
       { status: 200 }
     );
     response.cookies.set("myToken", token, {
-      httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 60 * 60 * 24 * 30,

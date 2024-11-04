@@ -41,7 +41,7 @@ export default function LoginForm() {
         toast.success(result.message);
         loginReset();
         router.push(
-          result.rol === "ADMIN" || result.rol === "MANAGER"
+          result.role === "ADMIN" || result.role === "MANAGER"
             ? "/admin"
             : "/HomeUser"
         );

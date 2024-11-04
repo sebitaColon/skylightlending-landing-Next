@@ -41,13 +41,3 @@ export const fetchAdminData = async () => {
   }
   return await response.json();
 };
-
-export const logoutAdmin = async () =>{
-    const response = await fetch(`http://localhost:3000/api/user`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return await response.json();
-};

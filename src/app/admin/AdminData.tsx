@@ -9,12 +9,13 @@ import {
   DropdownMenu,
   Avatar,
 } from "@nextui-org/react";
-import { fetchAdminData, logoutAdmin } from "./serviceAdmin";
+import { fetchAdminData } from "./serviceAdmin";
+import Cookies from 'js-cookie';
 
 interface UserAdmin {
   id: number;
   email: string;
-  rol: string; 
+  role: string; 
 }
 
 interface AdminState {
@@ -44,13 +45,10 @@ export default function AdminData() {
   }, [router]);
 
   const handleLogout = async () => {
-    try {
-      const logout = await logoutAdmin();
-      if (logout.success) {
-        router.push("/Login");
-      }
-    } catch (error) {
-      console.error("erro logout", error);
+    Cookies.remove('myToken');
+    const cookieEliminada = Cookies.get('myToken');
+    if (!cookieEliminada) {
+      router.push('/Login')
     }
   };
 
@@ -80,7 +78,7 @@ export default function AdminData() {
           <DropdownItem key="profile" className="h-14 gap-2">
             <p className="font-semibold text-center">Signed in as</p>
             <p className="font-semibold text-center">{data.userAdmin.email || ""}</p>
-            <p className="font-semibold text-center">{data.userAdmin.rol || "No Role"}</p>
+            <p className="font-semibold text-center">{data.userAdmin.role || "No Role"}</p>
           </DropdownItem>
           <DropdownItem key="settings">My Settings</DropdownItem>
           <DropdownItem key="team_settings">Team Settings</DropdownItem>

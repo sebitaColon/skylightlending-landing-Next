@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const usuarios = await prisma.user.findMany({
       orderBy:{
@@ -17,28 +17,5 @@ export async function GET(request: NextRequest) {
     );
   } finally {
     await prisma.$disconnect();
-  }
-}
-
-
-export async function POST() {
-  try{
-    const response = new NextResponse(
-      JSON.stringify({ message: "Logout successful", success: true }),
-      { status: 200 }
-    );
-    response.cookies.set("myToken", "", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 0, 
-      path: "/",
-    });
-    return response;
-  }catch(e){
-    return new NextResponse(
-      JSON.stringify({ error: "Internal server error" }),
-      { status: 500 }
-    );
   }
 }

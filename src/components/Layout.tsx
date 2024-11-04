@@ -1,6 +1,5 @@
 import Nav from "../components/nav";
 import Footer from "../components/footer";
-import { Toaster } from "react-hot-toast";
 
 interface LayoutProps {
   children: React.ReactNode;
