@@ -1,18 +1,21 @@
-"use client"
-import {useEffect, useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 import { Switch } from "@nextui-org/react";
 import { MoonIcon } from "./MoonIcon";
 import { SunIcon } from "./SunIcon";
 
 export default function ThemeMode() {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const savedMode = localStorage.getItem("darkMode" as string);
-    return savedMode === "true";
-  });
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const savedMode = localStorage.getItem("darkMode");
+    if (savedMode === "true") {
+      setIsDarkMode(true);
+    }
+  }, []);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDarkMode);
-
     localStorage.setItem("darkMode", isDarkMode.toString());
   }, [isDarkMode]);
 
