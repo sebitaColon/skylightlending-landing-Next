@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import { Avatar, Button, Input} from '@nextui-org/react'
+import { Avatar} from '@nextui-org/react'
 import imageProtada from '@/assets/img-body-contactus.jpg'
 import imageCamera from '@/assets/imageCamera.svg'
 import ButtonBack from '@/components/UI/ButtonBack'
@@ -11,7 +11,7 @@ export default function page() {
 
   return (
     <section className='w-full h-[100vh] bg-blueFooter flex items-center flex-col relative'>
-      <Image src={imageProtada} alt='imageProtada' className='absolute max-h-[290px] lg:max-h-[320px] object-cover w-full '></Image>
+      <Image src={imageProtada} alt='imgProtada' className='absolute max-h-[290px] lg:max-h-[320px] object-cover w-full '/>
       <ButtonBack/>
       <div className='w-full h-full flex bg-transparent abosulute z-10 top-0 left-0 flex-col items-center justify-start gap-5 p-5 pt-20'>
           <h1 className='text-white text-5xl font-bold'>WELCOME!</h1>
