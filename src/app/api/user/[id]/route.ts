@@ -1,0 +1,26 @@
+import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import { updateState } from "./updateState";
+import { updateUser } from "./updateUser";
+const prisma = new PrismaClient();
+
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: number } }
+) {
+  const id = params.id;
+  const { name, last_name, email, role, action, estado } = await req.json();
+  if (!id) {
+    return new NextResponse(
+      JSON.stringify({ message: "Error id", success: false }),
+      { status: 400 }
+    );
+  }
+  switch(action){
+    case "updateState":
+     return await updateState(id, estado);
+     case "updateUser":
+      return await updateUser(id, name, last_name, email, role);
+  }
+}
+
