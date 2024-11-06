@@ -19,7 +19,7 @@ export default function Admin() {
 
         <NavbarContent className="dark hidden sm:flex gap-4" justify="center">
           <NavbarItem className="text-white font-bold">
-              SKYLENDING
+              SKYLIGHT LENDING
           </NavbarItem>
         </NavbarContent>
         <NavbarContent as="div" justify="end">

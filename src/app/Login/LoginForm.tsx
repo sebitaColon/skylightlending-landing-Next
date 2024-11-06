@@ -1,27 +1,34 @@
 "use client";
-import { Input, Button, Link, useDisclosure } from "@nextui-org/react";
+import { Input, Button, Link } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginValidation } from "@/validation/loginValidation";
 import { onLoginSubmitService } from "./loginService";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import ModalLogin from "@/components/Modal";
+import { ModalTermsOfService } from "@/components/ModalTermsOfService";
 import { useState } from "react";
+import ModalPrivacyPolicy from "@/components/ModalPrivacyPolicy";
 
 export default function LoginForm() {
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [state, setState] = useState(false);
-  function estado() {
-    setState(true);
-    onOpen();
-  }
-  function estado2() {
-    setState(false);
-    onOpen();
-  }
+  const [isModalPrivacyPolicyOpen, setModalPrivacyPolicyOpen] = useState(false);
+  const [isModalTermsOpen, setModalTermsOpen] = useState(false);
 
+  function openModal(tittle: 'PrivacyPolicy' | 'ModalTerms'){
+    if(tittle === "PrivacyPolicy"){
+      setModalPrivacyPolicyOpen(true);
+    }else if (tittle === "ModalTerms"){
+      setModalTermsOpen(true);
+    }
+  }
+  function closeModal(tittle: 'PrivacyPolicy' | 'ModalTerms'){
+    if(tittle === "PrivacyPolicy"){
+      setModalPrivacyPolicyOpen(false);
+    }else if (tittle === "ModalTerms"){
+      setModalTermsOpen(false);
+    }
+  }
   const router = useRouter();
   const {
     register: loginRegister,
@@ -112,11 +119,18 @@ export default function LoginForm() {
       <div className="flex flex-col justify-center items-center mt-3 p-5 sm:flex-row sm:justify-between">
         <h1>© 2024 Skylight Lending, LLC</h1>
         <div className="cursor-pointer">
-          <Link onPress={estado}>Privacy Policy</Link> |{" "}
-          <Link onPress={estado2}>Terms of Service</Link>
+          <Link onClick={()=>openModal('PrivacyPolicy')}>Privacy Policy</Link> |{" "}
+          <Link onPress={()=>openModal('ModalTerms')}>Terms of Service</Link>
         </div>
-      </div>
-      <ModalLogin isOpen={isOpen} onClose={onClose} state={state} />
+        </div>
+        <ModalPrivacyPolicy 
+          isOpen={isModalPrivacyPolicyOpen} 
+          onClose={()=>closeModal('PrivacyPolicy')} 
+        />
+        <ModalTermsOfService 
+          isOpen={isModalTermsOpen} 
+          onClose={()=>closeModal('ModalTerms')} 
+        />
     </>
   );
 }
