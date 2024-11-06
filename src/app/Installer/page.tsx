@@ -1,7 +1,7 @@
 import Layout from "../../components/Layout";
 import BackgrounImg from "../../assets/FondoFormInstaller.jpg";
 import Image from "next/image";
-import Installer from "@/components/Installer";
+import Installer from "./Installer";
 
 function InstallerPage() {
   return (

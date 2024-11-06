@@ -2,8 +2,8 @@
 import React from "react";
 import { Input, Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
-import schema from "../validation/installerSchema";
+import toast from "react-hot-toast";
+import schema from "@/validation/installerSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import emailjs from "emailjs-com";
 
@@ -43,7 +43,6 @@ export default function Installer() {
 
   return (
     <div>
-      <Toaster position="bottom-center" />
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white p-5 rounded-3xl lg:min-w-[800px] dark:bg-black"

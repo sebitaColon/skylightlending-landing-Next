@@ -1,36 +1,10 @@
-"use client";
 import Layout from "../../components/Layout";
 import BackgrounImg from "../../assets/FondoFormInstaller.jpg";
-import { Input, Button, Link } from "@nextui-org/react";
-import { useState } from "react";
-import { ModalLogin } from "../../components/Modal";
-import { useDisclosure } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import Image from "next/image";
+import LoginForm from "./LoginForm";
 
 export default function Login() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [state, setState] = useState(false);
-  const [view, setView] = useState("login"); // Puede ser 'login', 'forgotPassword', 'register'
-
-  function estado() {
-    setState(true);
-    onOpen();
-  }
-  function estado2() {
-    setState(false);
-    onOpen();
-  }
-
-  const handleForgotPassword = () => {
-    setView("ForgotPassword");
-  };
-  const handleRegister = () => {
-    setView("register");
-  };
-  const handleLogin = () => {
-    setView("login");
-  };
-
   return (
     <Layout>
       <div className="w-full h-auto flex flex-col items-center justify-center relative">
@@ -48,155 +22,9 @@ export default function Login() {
               Get in touch
             </Button>
           </div>
-          {view === "ForgotPassword" ? (
-            //forgot password
-            <div>
-              <div id="ForgotPassword" className="gap-0 w-full">
-                <div className="flex py-2 px-1 items-center justify-between">
-                  <h1>Reset Password</h1>
-                  <Button
-                    className="w-1/6"
-                    variant="shadow"
-                    radius="full"
-                    color="primary"
-                    onClick={handleLogin}
-                  >
-                    back
-                  </Button>
-                </div>
-                <Input
-                  autoFocus
-                  placeholder="Enter your email"
-                  variant="underlined"
-                />
-                <p className="pt-4">
-                  {" "}
-                  Please enter your email address to reset your password.
-                </p>
-                <div className="w-full flex justify-center">
-                  <Button
-                    className="mt-10 w-full sm:max-w-xl"
-                    radius="full"
-                    color="primary"
-                    variant="shadow"
-                    onClick={handleForgotPassword}
-                  >
-                    Send reset code
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ) : view === "register" ? (
-            <div id="register">
-              <form>
-                <div className="flex py-2 px-1 items-center justify-between">
-                  <h1>Create Account</h1>
-                  <Button
-                    className="w-1/6"
-                    variant="shadow"
-                    radius="full"
-                    color="primary"
-                    onClick={handleLogin}
-                  >
-                    back
-                  </Button>
-                </div>
-                <h1 className="pt-2 pl-1">Name</h1>
-                <Input autoFocus placeholder="Name" variant="underlined" />
-                <h1 className="pt-2 pl-1">Last name</h1>
-                <Input autoFocus placeholder="Last name" variant="underlined" />
-                <h1 className="pt-2 pl-1">Email</h1>
-                <Input autoFocus placeholder="Email" variant="underlined" />
-                <h1 className="pt-2 pl-1">Password</h1>
-                <Input
-                  autoFocus
-                  variant="underlined"
-                  placeholder="........."
-                  type="password"
-                />
-
-                <div className="w-full flex justify-center">
-                  <Button
-                    className="mt-10 w-full sm:max-w-xl"
-                    radius="full"
-                    color="primary"
-                    variant="shadow"
-                    type="submit"
-                  >
-                    Create Account
-                  </Button>
-                </div>
-              </form>
-            </div>
-          ) : (
-            //login
-            <div id="login">
-              <h1 className="font-InterBold text-5xl ml-5 flex flex-col leading-none tracking-[-0.8px]">
-                <span className="text-blue-600">For Solar!</span>
-                Start here.
-              </h1>
-              <form className="bg-background text-foreground p-5 rounded-3xl ">
-                <div id="Login" className=" w-full">
-                  <div className="flex pt-10 py-2 px-1 justify-between">
-                    <h1>Email Address</h1>
-                    <Link
-                      color="primary"
-                      className="dark:text-white"
-                      href="#"
-                      onClick={handleRegister}
-                      size="sm"
-                    >
-                      Create Account
-                    </Link>
-                  </div>
-                  <Input
-                    autoFocus
-                    placeholder="Enter your email"
-                    variant="underlined"
-                  />
-                  <div className="flex pt-10 py-2 px-1 justify-between">
-                    <h1>Password</h1>
-                    <Link
-                      color="primary"
-                      className="dark:text-white"
-                      href="#"
-                      onClick={handleForgotPassword}
-                      size="sm"
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <Input
-                    variant="underlined"
-                    placeholder="........."
-                    type="password"
-                  />
-                  <div className="w-full flex justify-center">
-                    <Button
-                      className="mt-10 w-full sm:max-w-xl"
-                      radius="full"
-                      color="primary"
-                      variant="shadow"
-                      type="submit"
-                    >
-                      {" "}
-                      Login{" "}
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          )}
-          <div className="flex flex-col justify-center items-center mt-3 p-5 md:flex-row md:justify-between">
-            <h1>© 2024 Skylight Lending, LLC</h1>
-            <div className="cursor-pointer ">
-              <Link className="dark:text-white" onClick={estado}>Privacy Policy</Link> |{" "}
-              <Link className="dark:text-white" onClick={estado2}>Terms of Service</Link>
-            </div>
-          </div>
+          <LoginForm/>
         </div>
       </div>
-      <ModalLogin isOpen={isOpen} onClose={onClose} state={state} />
     </Layout>
   );
 }
