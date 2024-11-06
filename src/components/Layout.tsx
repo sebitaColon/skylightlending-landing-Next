@@ -1,4 +1,3 @@
-"use client"
 import Nav from "../components/nav";
 import Footer from "../components/footer";
 import ButtonUp from "./UI/ButtonUp";
