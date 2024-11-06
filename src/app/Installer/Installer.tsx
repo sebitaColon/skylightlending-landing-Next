@@ -45,13 +45,13 @@ export default function Installer() {
     <div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-5 rounded-3xl lg:min-w-[800px] "
+        className="bg-white p-5 rounded-3xl lg:min-w-[800px] dark:bg-black"
       >
         <h1 className="font-InterBold text-center text-black text-md sm:text-3xl pb-10 mb-5 border-b-1">
           <span className="text-blue-600 pr-1">Skylight Lending New</span>
           Dealer Application
         </h1>
-        <div className="w-full grid sm:grid-cols-2  sm:grid-rows-4 gap-x-5  bg-white">
+        <div className="w-full grid sm:grid-cols-2  sm:grid-rows-4 gap-x-5 dark:bg-black">
           <div className="h-auto flex flex-col">
             <Input
               {...register("name")}

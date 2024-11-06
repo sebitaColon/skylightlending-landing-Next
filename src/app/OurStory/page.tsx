@@ -13,7 +13,7 @@ function OurStory() {
           alt="imgBodyContatUs"
         />
         <div className=" text-white absolute text-center pt-60">
-          <p className="pb-10 text-4xl">Our Story</p>
+          <p className="pb-10 text-4xl text-blueFooter">Our Story</p>
           <h3 className="bg-gray-500 bg-opacity-50 w-full px-10 py-4 mt-10 md:mt-28 lg:mt-40] text-justify">
             Our company maintains a straight-forward vision, Let’s Enable the
             Change we want to see in the World. From there we have framed our
@@ -27,7 +27,7 @@ function OurStory() {
         </div>
 
         <div className="bg-amarillo w-full lg:h-[50vh] py-4 flex items-center justify-center flex-col text-justify">
-          <p className="text-white text-lg px-10 lg:w-[90%]">
+          <p className="text-white text-lg px-10 lg:w-[90%] dark:text-black">
             Skylights are a symbol of the space you are in and the potential of
             what the space can be. With light pouring in, it changes the space
             and brings energy to the home and people in it. Our mission as a
@@ -35,7 +35,7 @@ function OurStory() {
             homeowners finance and afford the potential they see in their homes
             and the impact it can make.
             </p>
-            <p className="text-white text-xl px-10 py-4 lg:w-[90%]">Whether is integrating solar and
+            <p className="text-white text-xl px-10 py-4 lg:w-[90%]  dark:text-black">Whether is integrating solar and
             batteries for a fully renewable energy powered home or seeing your
             dreams come to life with home improvement projects, we are
             passionate about homeowners embracing the change they want to see.

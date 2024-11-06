@@ -11,6 +11,7 @@ import {
   Link,
 } from "@nextui-org/react";
 import { AcmeLogo } from "./UI/AcmeLogo";
+import ThemeMode from "./ThemeMode";
 
 export default function Nav() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -27,22 +28,22 @@ export default function Nav() {
 
   return (
     <Navbar
-      className="fixed z-50 p-1 bg-white top-10"
+      className="fixed z-50 p-1 bg-white top-10 dark:bg-black text-black dark:text-white"
       onMenuOpenChange={setIsMenuOpen}
     >
-      <NavbarContent>
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="absolute md:hidden text-foreground"
-        />
-        <NavbarBrand className="flex justify-center md:justify-start">
-          <a href="/">
+      <NavbarMenuToggle
+        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        className="lg:hidden text-foreground"
+      />
+      <NavbarContent className="w-full">
+        <NavbarBrand className="flex justify-center items-center lg:justify-start w-full">
+          <a href="/" className="ml-10">
             <AcmeLogo />
           </a>
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden md:flex gap-1 lg:gap-3" justify="center">
+      <NavbarContent className="hidden lg:flex gap-1 lg:gap-3" justify="center">
         <NavbarItem>
           <Link
             className=" text-sm  lg:text-lg hover:bg-yellow-400 p-5 rounded-full"
@@ -90,7 +91,7 @@ export default function Nav() {
           </Link>
         </NavbarItem>
       </NavbarContent>
-
+      <ThemeMode />
       <NavbarMenu className="z-40">
         {menuItems.map((item, index) => (
           <NavbarMenuItem className="mt-20" key={`${item}-${index}`}>
