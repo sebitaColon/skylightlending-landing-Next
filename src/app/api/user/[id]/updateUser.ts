@@ -34,6 +34,18 @@ export async function updateUser(id:number, name: string,
           status: 403, 
         });
       }
+      if (userToUpdate.email !== email) {
+        const existingUser = await prisma.user.findUnique({
+          where: { email: email },
+        });
+        if (existingUser) {
+          return NextResponse.json({
+            message: "Email already exists.",
+            success: false,
+            status: 404,
+          });
+        }
+      }
       const updatedUser = await prisma.user.update({
         where: { id: Number(id) },
         data: {

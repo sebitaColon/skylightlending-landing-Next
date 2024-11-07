@@ -29,6 +29,7 @@ interface User {
   isActive: boolean;
 }
 interface DecodedToken {
+  id:number;
   role: string;
 }
 
@@ -56,10 +57,10 @@ export default function TableUsers() {
         if (token) {
           const decoded: DecodedToken = jwtDecode(token);
           setAdminRole(decoded.role);
-          console.log(token)
           const resUsers = await fetch("/api/user");
           const usersData: User[] = await resUsers.json();
-          setData({ users: usersData });
+          const filteredUsers = usersData.filter(user => user.id !== decoded.id);
+          setData({ users: filteredUsers });
         }
       } catch (error) {
         router.push("/Login");
