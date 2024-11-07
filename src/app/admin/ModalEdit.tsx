@@ -26,10 +26,11 @@ interface ModalEditProps {
   user: User;
   isOpen: boolean;
   onClose: () => void;
+  adminRole: string;
 }
 
-export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
-  const [id, setId ] = useState(user.id)
+export default function ModalEdit({ user, isOpen, onClose, adminRole }: ModalEditProps) {
+  const [id, setId] = useState(user.id)
   const {
     handleSubmit,
     control,
@@ -54,7 +55,7 @@ export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
 
   const handleSave = async (data: any) => {
     try {
-      const result = await updateUser({...data, id});
+      const result = await updateUser({ ...data, id, adminRole });
       if (!result.success) {
         toast.error(`${result.message}`);
       } else {
@@ -135,7 +136,7 @@ export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
                     label="Select a role"
                     defaultSelectedKeys={[field.value]}
                   >
-                    <SelectItem key={"ADMIN"} value="ADMIN">
+                    <SelectItem className={`${adminRole === 'MANAGER' ? 'hidden' : ''}`} key={"ADMIN"} value="ADMIN">
                       ADMIN
                     </SelectItem>
                     <SelectItem key={"MANAGER"} value="MANAGER">

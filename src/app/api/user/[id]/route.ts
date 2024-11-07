@@ -20,7 +20,7 @@ export async function PUT(
     case "updateState":
      return await updateState(id, estado, adminRole);
      case "updateUser":
-      return await updateUser(id, name, last_name, email, role);
+      return await updateUser(id, name, last_name, email, role, adminRole);
   }
 }
 

@@ -143,6 +143,7 @@ export default function TableUsers() {
           user={selectedUser}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
+          adminRole={adminRole}
         />
       )}
     </>
