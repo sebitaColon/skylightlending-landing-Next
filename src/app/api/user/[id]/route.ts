@@ -9,7 +9,7 @@ export async function PUT(
   { params }: { params: { id: number } }
 ) {
   const id = params.id;
-  const { name, last_name, email, role, action, estado } = await req.json();
+  const { name, last_name, email, role, action, estado, adminRole } = await req.json();
   if (!id) {
     return new NextResponse(
       JSON.stringify({ message: "Error id", success: false }),
@@ -18,9 +18,9 @@ export async function PUT(
   }
   switch(action){
     case "updateState":
-     return await updateState(id, estado);
+     return await updateState(id, estado, adminRole);
      case "updateUser":
-      return await updateUser(id, name, last_name, email, role);
+      return await updateUser(id, name, last_name, email, role, adminRole);
   }
 }
 
