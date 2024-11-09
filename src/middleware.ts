@@ -22,6 +22,12 @@ export async function middleware(req: NextRequest) {
     if (req.nextUrl.pathname.startsWith("/HomeUser") && role !== "USER") {
       return NextResponse.redirect(new URL("/Login", req.url));
     }
+    if (req.nextUrl.pathname.startsWith("/Profile") 
+      && role !== "USER" 
+      && role !== "ADMIN" 
+      && role !== "MANAGER" ) {
+      return NextResponse.redirect(new URL("/Login", req.url));
+    }
     return NextResponse.next();
   } catch (error) {
     console.error("Error verifying token:", error);

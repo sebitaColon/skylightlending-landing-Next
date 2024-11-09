@@ -14,6 +14,8 @@ import Cookies from 'js-cookie';
 
 interface UserAdmin {
   id: number;
+  name: string,
+  last_name: string,
   email: string;
   role: string; 
 }
@@ -76,11 +78,11 @@ export default function AdminData() {
         </DropdownTrigger>
         <DropdownMenu aria-label="Profile Actions" variant="flat">
           <DropdownItem key="profile" className="h-14 gap-2">
-            <p className="font-semibold text-center">Signed in as</p>
-            <p className="font-semibold text-center">{data.userAdmin.email || ""}</p>
-            <p className="font-semibold text-center">{data.userAdmin.role || "No Role"}</p>
+            <p className="font-semibold text-center">{data.userAdmin.name + " " + data.userAdmin.last_name}</p>
+            <p className="font-semibold text-center">{data.userAdmin.email}</p>
+            <p className="font-semibold text-center">{data.userAdmin.role}</p>
           </DropdownItem>
-          <DropdownItem key="settings">My Settings</DropdownItem>
+          <DropdownItem key="settings" href="/Profile">My Settings</DropdownItem>
           <DropdownItem key="team_settings">Team Settings</DropdownItem>
           <DropdownItem key="configurations">Configurations</DropdownItem>
           <DropdownItem key="logout" color="danger" onClick={handleLogout}>
