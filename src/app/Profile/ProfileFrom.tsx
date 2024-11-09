@@ -9,6 +9,8 @@ import { fetchUserData, updateUserProfile } from './serviceUser'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
+import { yupResolver } from "@hookform/resolvers/yup";
+import { profileDataValidation } from "@/validation/profileDataValidation";
 
 interface User {
     id: number;
@@ -27,6 +29,10 @@ export default function ProfileForm() {
     const router = useRouter();
     const [data, setData] = useState<UserState>({ user: null });
     const [id, setId] = useState<number>()
+    const [formValues, setFormValues] = useState<{ name: string, last_name: string }>({
+        name: '',
+        last_name: ''
+    });
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -36,6 +42,10 @@ export default function ProfileForm() {
                 }
                 setData({ user: userData.data });
                 setId(userData.data.id);
+                setFormValues({
+                    name: userData.data.name,
+                    last_name: userData.data.last_name
+                });
             } catch (error) {
                 router.push("/Login");
             }
@@ -47,7 +57,10 @@ export default function ProfileForm() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm();
+        reset
+    } = useForm({
+        resolver: yupResolver(profileDataValidation),
+    });
 
     const handleSave = async (data: any) => {
         try {
@@ -62,6 +75,10 @@ export default function ProfileForm() {
                 const updatedUserData = await fetchUserData();
                 if (updatedUserData.success) {
                     setData({ user: updatedUserData.data });
+                    setFormValues({
+                        name: updatedUserData.data.name,
+                        last_name: updatedUserData.data.last_name
+                    }); 
                 }
             }
         } catch (error) {
@@ -78,34 +95,36 @@ export default function ProfileForm() {
 
     function handleView() {
         setIsEditing(!isEditing)
+        reset();
     }
 
+    const fields: { label: string, name: 'name' | 'last_name', defaultValue: string }[] = [
+        { label: "Name", name: "name", defaultValue: data.user.name },
+        { label: "Last Name", name: "last_name", defaultValue: data.user.last_name },
+    ];
+        
     return (
         <div>
             {isEditing ? (
                 <form onSubmit={handleSubmit(handleSave)}
-                    className='flex gap-2 pb-2 items-end'>
+                    className='gap-2 pb-2 items-end justify-end'>
                     <div className='gap-2 flex flex-col text-white'>
-                        <Input
-                            isClearable
-                            radius="lg"
-                            defaultValue={`${data.user?.name || null}`}
-                            className='text-foreground'
-                            {...register("name", {
-                                required: true,
-                            })}
-                        />
-                        <Input
-                            isClearable
-                            radius="lg"
-                            defaultValue={`${data.user?.last_name || null}`}
-                            className='text-foreground'
-                            {...register("last_name", {
-                                required: true,
-                            })}
-                        />
+                    {fields.map((field) => (
+                        <div key={field.name} className="gap-2 flex flex-col text-white">
+                            <Input
+                                isClearable
+                                radius="lg"
+                                defaultValue={field.defaultValue}
+                                className="text-foreground"
+                                {...register(field.name, { required: `${field.label} is required` })}
+                            />
+                            {errors[field.name]&& (
+                                <p className="text-red-500">{errors[field.name]?.message}</p>
+                            )}
+                        </div>
+                    ))}
                     </div>
-                    <div className='flex flex-col gap-2'>
+                    <div className='flex justify-end pt-2 gap-2'>
                         <Button type="submit" className='min-h-5 min-w-5 w-10 text-white h-10 p-0 rounded-lg bg-green-500'>
                             <Image src={iconDone} alt='iconDone' className='w-7 h-7' />
                         </Button>
