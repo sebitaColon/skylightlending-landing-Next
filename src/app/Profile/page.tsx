@@ -19,7 +19,6 @@ export default function page() {
         <div className='h-auto w-full flex flex-col items-center justify-center '>
           <div className='w-auto h-auto relative mb-6'>
             <ProfileFromImage/>
-            <Avatar src="https://i.pravatar.cc/150?u=a04258114e29026708c" isBordered color='primary' className="w-20 h-20 text-large lg:w-36 lg:h-36 " />
           </div>
           <div className='w-auto h-auto flex justify-center flex-col text-white '>
             <ProfileFrom/>

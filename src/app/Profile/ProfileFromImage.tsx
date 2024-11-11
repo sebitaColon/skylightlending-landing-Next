@@ -1,22 +1,68 @@
-'use client'
-import { Button } from '@nextui-org/react'
-import React, { useState } from 'react'
-import Image from 'next/image'
-import imageCamera from '@/assets/imageCamera.svg'
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
-import uploadFile from '@/assets/uploadFile.svg'
-import imageProtada from '@/assets/img-body-contactus.jpg'
-import iconEdit from '@/assets/iconEdit.svg'
+'use client';
+import { Avatar, Button } from '@nextui-org/react';
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import imageCamera from '@/assets/imageCamera.svg';
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@nextui-org/react';
+import uploadFile from '@/assets/uploadFile.svg';
+import imageProtada from '@/assets/img-body-contactus.jpg';
+import iconEdit from '@/assets/iconEdit.svg';
+import { useRouter } from "next/navigation";
+import { fetchUserData } from './serviceUser';
 
 export default function ProfileFromImage() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [fileName, setFileName] = useState<string | null>(null);
     const [imageSrc, setImageSrc] = useState<string | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [imageUrl, setImageUrl] = useState<string>();
+    const [file, setFile] = useState<File>()
+    const [id, setId] = useState<number>()
+    const router = useRouter();
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const userData = await fetchUserData();
+                if (!userData.success) {
+                    router.push("/Login");
+                }
+                setId(userData.data.id);
+            } catch (error) {
+                router.push("/Login");
+            }
+        };
+        fetchData();
+    }, [router]);
+
+    const updateFileChange = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (!file) {
+            console.error('No file selected');
+            return;
+        }
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch(`/api/user/${id}`, {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await response.json();
+            setImageUrl(data.imageUrl)
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        } finally {
+            setUploading(false);
+        }
+    }
+    
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             setFileName(file.name);
+            setFile(file)
             const reader = new FileReader();
             reader.onload = (e) => {
                 setImageSrc(e.target?.result as string);
@@ -29,11 +75,12 @@ export default function ProfileFromImage() {
     };
     return (
         <>
+        <Avatar showFallback src={`${imageUrl }`} isBordered color='primary' className="w-20 h-20 text-large lg:w-36 lg:h-36 " />
             <Button onPress={onOpen} className='min-w-8 min-h-8 p-1 w-auto h-auto bg-blue-500 rounded-full absolute -bottom-2 z-10 -right-2 lg:w-12 lg:h-12' >
                 <Image src={imageCamera} alt='imgCamera'/>
             </Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop='blur'>
-                <form>
+                <form onSubmit={updateFileChange}>
                     <ModalContent>
                         {(onClose) => (
                             <>
@@ -53,7 +100,7 @@ export default function ProfileFromImage() {
                                                         className='w-full h-full object-cover border-1 border-white rounded-full'
                                                         width={200}
                                                         height={200}
-                                                    />
+                                                        />
                                                 </span>
                                                 <div className='w-auto h-auto absolute gap-2 bottom-10 flex justify-between'>
                                                     <span className='text-[8px] text-white '>Juan Garcia</span>
@@ -62,7 +109,6 @@ export default function ProfileFromImage() {
                                                     </Button>
                                                 </div>
                                                 <span className='text-[6px] absolute bottom-7 text-gray-400'>sebita03082003@gmail.com</span>
-
                                             </div>
                                         ) : (
                                             <Image src={uploadFile} alt='upload'/>
@@ -75,8 +121,8 @@ export default function ProfileFromImage() {
                                     <Button color="danger" variant="light" onPress={onClose}>
                                         Close
                                     </Button>
-                                    <Button color="primary" onPress={onClose} type='submit'>
-                                        Action
+                                    <Button color='primary' onPress={onClose} type='submit'>
+                                        {uploading ? 'Uploading...' : 'Action'}
                                     </Button>
                                 </ModalFooter>
                             </>
