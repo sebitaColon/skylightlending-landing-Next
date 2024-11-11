@@ -17,7 +17,6 @@ export async function POST(
       { status: 400 }
     );
   }
-
   try {
     const data = await req.formData();
     const file = data.get('file');
@@ -53,6 +52,12 @@ export async function POST(
     
     console.log(response.secure_url);
     const imageUrl = response.secure_url;
+    const updatedUser = await prisma.user.update({
+      where: { id: Number(id) },
+      data: {
+        image_url: response.secure_url, 
+      },
+    });
     
     return new NextResponse(
       JSON.stringify({ message: "Image uploaded successfully", success: true, imageUrl: imageUrl}),

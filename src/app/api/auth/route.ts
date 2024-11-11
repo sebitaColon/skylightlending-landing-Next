@@ -26,11 +26,16 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
+    const adminData = await prisma.user.findUnique({
+      where: {
+        id: decoded.id, 
+      },
+    }); 
     return new NextResponse(
     JSON.stringify({
       message: "User data fetched",
       success: true,
-      data: decoded,
+      data: adminData,
     }),
     { status: 200 }
   );

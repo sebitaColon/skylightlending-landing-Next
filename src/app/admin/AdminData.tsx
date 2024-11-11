@@ -16,6 +16,7 @@ interface UserAdmin {
   id: number;
   email: string;
   role: string; 
+  image_url: string;
 }
 
 interface AdminState {
@@ -71,7 +72,7 @@ export default function AdminData() {
             color="primary"
             name="Jason Hughes"
             size="sm"
-            src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+            src = {data.userAdmin.image_url}
           />
         </DropdownTrigger>
         <DropdownMenu aria-label="Profile Actions" variant="flat">

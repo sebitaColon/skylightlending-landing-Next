@@ -27,6 +27,7 @@ export default function ProfileFromImage() {
                 if (!userData.success) {
                     router.push("/Login");
                 }
+                setImageUrl(userData.data.image_url)
                 setId(userData.data.id);
             } catch (error) {
                 router.push("/Login");
