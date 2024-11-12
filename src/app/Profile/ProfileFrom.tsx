@@ -24,6 +24,11 @@ interface UserState {
     user: User | null;
 }
 
+interface DataProfile {
+    name: string,
+    last_name: string,
+}
+
 export default function ProfileForm() {
     const [isEditing, setIsEditing] = useState(false);
     const router = useRouter();
@@ -38,7 +43,7 @@ export default function ProfileForm() {
             try {
                 const userData = await fetchUserData();
                 if (!userData.success) {
-                    router.push("/Login");
+                    router.push("/login");
                 }
                 setData({ user: userData.data });
                 setId(userData.data.id);
@@ -47,7 +52,7 @@ export default function ProfileForm() {
                     last_name: userData.data.last_name
                 });
             } catch (error) {
-                router.push("/Login");
+                router.push("/login");
             }
         };
         fetchData();
@@ -62,7 +67,7 @@ export default function ProfileForm() {
         resolver: yupResolver(profileDataValidation),
     });
 
-    const handleSave = async (data: any) => {
+    const handleSave = async (data: DataProfile) => {
         try {
             if (!id) {
                 toast.error("ID no encontrado");

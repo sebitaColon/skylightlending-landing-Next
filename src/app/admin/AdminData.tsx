@@ -33,13 +33,13 @@ export default function AdminData() {
       try {
         const adminData = await fetchAdminData();
         if (!adminData.success) {
-          router.push("/Login");
+          router.push("/login");
           return;
         }
         setData({ userAdmin: adminData.data }); 
       } catch (error) {
         console.error("Error fetching data", error);
-        router.push("/Login");
+        router.push("/login");
       }
     };
 
@@ -50,7 +50,7 @@ export default function AdminData() {
     Cookies.remove('myToken');
     const cookieEliminada = Cookies.get('myToken');
     if (!cookieEliminada) {
-      router.push('/Login')
+      router.push('/login')
     }
   };
 
@@ -82,7 +82,7 @@ export default function AdminData() {
             <p className="font-semibold text-center">{data.userAdmin.email}</p>
             <p className="font-semibold text-center">{data.userAdmin.role}</p>
           </DropdownItem>
-          <DropdownItem key="settings" href="/Profile">My Settings</DropdownItem>
+          <DropdownItem key="settings" href="/profile">My Settings</DropdownItem>
           <DropdownItem key="team_settings">Team Settings</DropdownItem>
           <DropdownItem key="configurations">Configurations</DropdownItem>
           <DropdownItem key="logout" color="danger" onClick={handleLogout}>

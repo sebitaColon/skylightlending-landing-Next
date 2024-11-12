@@ -50,7 +50,7 @@ export default function LoginForm() {
         router.push(
           result.role === "ADMIN" || result.role === "MANAGER"
             ? "/admin"
-            : "/HomeUser"
+            : "/homeUser"
         );
       }
     } catch (error) {
