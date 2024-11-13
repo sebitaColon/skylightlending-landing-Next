@@ -13,7 +13,7 @@ import { fetchUserData } from './serviceUser';
 export default function ProfileFromImage() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [fileName, setFileName] = useState<string | null>(null);
-    const [imageSrc, setImageSrc] = useState<string | null>(null);
+    const [imageSrc, setImageSrc] = useState<string>();
     const [uploading, setUploading] = useState(false);
     const [imageUrl, setImageUrl] = useState<string>();
     const [file, setFile] = useState<File>()
@@ -25,12 +25,13 @@ export default function ProfileFromImage() {
             try {
                 const userData = await fetchUserData();
                 if (!userData.success) {
-                    router.push("/Login");
+                    router.push("/login");
                 }
                 setImageUrl(userData.data.image_url)
+                setImageSrc(userData.data.image_url)
                 setId(userData.data.id);
             } catch (error) {
-                router.push("/Login");
+                router.push("/login");
             }
         };
         fetchData();
@@ -71,7 +72,7 @@ export default function ProfileFromImage() {
             reader.readAsDataURL(file);
         } else {
             setFileName('');
-            setImageSrc(null);
+            setImageSrc('');
         }
     };
     return (
@@ -89,7 +90,7 @@ export default function ProfileFromImage() {
                                 <ModalBody>
                                     <div className='w-full h-52 flex items-center justify-center relative border-3 border-dashed border-blueFooter rounded-2xl'>
                                         {imageSrc ? (
-                                            <div className='w-full h-full flex items-center justify-center relative overflow-hidden bg-blueFooter'>
+                                            <div className='w-full h-full flex items-center justify-center relative overflow-hidden bg-blueFooter rounded-2xl'>
                                                 <h1 className='text-white text-base font-bold absolute top-3 z-20'>WELCOME!</h1>
                                                 <h1 className=' text-[10px] text-white font-bold absolute top-9 z-20' style={{ fontFamily: 'fantasy' }}>to my profile</h1>
                                                 <Image src={imageProtada} alt='imagePortada' className='object-cover w-full h-full -top-2/4 left-0 absolute'/>
@@ -118,13 +119,18 @@ export default function ProfileFromImage() {
                                     </div>
                                     <h1>{fileName}</h1>
                                 </ModalBody>
-                                <ModalFooter>
-                                    <Button color="danger" variant="light" onPress={onClose}>
-                                        Close
+                                <ModalFooter className='flex items-center justify-between'>
+                                    <Button color="danger" onPress={onClose}>
+                                        Delete
                                     </Button>
-                                    <Button color='primary' onPress={onClose} type='submit'>
-                                        {uploading ? 'Uploading...' : 'Action'}
-                                    </Button>
+                                    <div>
+                                        <Button color="danger" variant="light" onPress={onClose}>
+                                            Close
+                                        </Button>
+                                        <Button color='primary' onPress={onClose} type='submit'>
+                                            {uploading ? 'Uploading...' : 'Action'}
+                                        </Button>
+                                    </div>
                                 </ModalFooter>
                             </>
                         )}
