@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
     const { valid, decoded } = await verifyTokenUser(token);
     if (!valid) {
-      return NextResponse.redirect(new URL("/Login", request.url));
+      return NextResponse.redirect(new URL("/login", request.url));
     }
     if (!decoded) {
       return new NextResponse(

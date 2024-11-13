@@ -50,7 +50,7 @@ export default function LoginForm() {
         router.push(
           result.role === "ADMIN" || result.role === "MANAGER"
             ? "/admin"
-            : "/HomeUser"
+            : "/home"
         );
       }
     } catch (error) {
@@ -71,7 +71,7 @@ export default function LoginForm() {
         <div id="Login" className=" w-full">
           <div className="flex pt-10 py-2 px-1 justify-between">
             <h1>Email Address</h1>
-            <Link color="primary" href="/Register"  size="sm">
+            <Link color="primary" href="/register"  size="sm">
               Create Account
             </Link>
           </div>
@@ -88,7 +88,7 @@ export default function LoginForm() {
           )}
           <div className="flex pt-10 py-2 px-1 justify-between">
             <h1>Password</h1>
-            <Link color="primary" href="/ForgotPassword" size="sm">
+            <Link color="primary" href="/forgot-password" size="sm">
               Forgot password?
             </Link>
           </div>

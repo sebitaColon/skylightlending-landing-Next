@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import BackgrounImg from "../../assets/FondoFormInstaller.jpg";
-import ResetPassword from "@/app/ResetPassword/ResetPassword";
+import ResetPassword from "./ResetPassword";
 
 export default function page() {
   return (

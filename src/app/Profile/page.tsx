@@ -2,7 +2,6 @@ import React from 'react'
 import Image from 'next/image'
 import { Avatar} from '@nextui-org/react'
 import imageProtada from '@/assets/img-body-contactus.jpg'
-import imageCamera from '@/assets/imageCamera.svg'
 import ButtonBack from '@/components/UI/ButtonBack'
 import ProfileFrom from './ProfileFrom'
 import ProfileFromImage from './ProfileFromImage'
@@ -20,12 +19,8 @@ export default function page() {
           <div className='w-auto h-auto relative mb-6'>
             <ProfileFromImage/>
           </div>
-          <div className='w-auto h-auto flex justify-center flex-col text-white '>
             <ProfileFrom/>
-            <span className='text-sm text-gray-400'>sebita03082003@gmail.com</span>
-          </div>
         </div>
-        <h2 className='text-white font-bold text-xl pt-10'>My role: User</h2>
       </div>
     </section>
   )

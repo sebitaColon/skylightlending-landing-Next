@@ -1,5 +1,5 @@
 import imgAcme from "../../assets/logo-f-w.png";
-import imgAcmeBlack from "../../assets/logo/logo-black.jpg";
+import imgAcmeBlack from "../../assets/logo/logo-black.png";
 import Image from "next/image";
 export const AcmeLogo = () => (
   <div>

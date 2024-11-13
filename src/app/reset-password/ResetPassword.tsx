@@ -16,7 +16,7 @@ export default function ResetPassword() {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
     if (!token) {
-      router.push('/Login')
+      router.push('/login')
     }else{
       setEmail(token);
     }
@@ -37,7 +37,7 @@ export default function ResetPassword() {
         toast.error(`${result.message}`);
       } else {
         toast.success(`${result.message}`);
-        router.push("/Login");
+        router.push("/login");
       }
     } catch (error) {
       console.error("Error:", error);
