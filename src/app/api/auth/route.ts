@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
     const { valid, decoded } = await verifyTokenUser(token);
     if (!valid) {
-      return NextResponse.redirect(new URL("/Login", request.url));
+      return NextResponse.redirect(new URL("/login", request.url));
     }
     if (!decoded) {
       return new NextResponse(
@@ -26,11 +26,16 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
+    const adminData = await prisma.user.findUnique({
+      where: {
+        id: decoded.id, 
+      },
+    }); 
     return new NextResponse(
     JSON.stringify({
       message: "User data fetched",
       success: true,
-      data: decoded,
+      data: adminData,
     }),
     { status: 200 }
   );

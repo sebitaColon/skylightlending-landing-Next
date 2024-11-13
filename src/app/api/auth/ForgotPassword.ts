@@ -29,7 +29,7 @@ export async function handleForgotPassword(email: string) {
         },
         JWT_SECRET
       );
-      const resetLink = `http://localhost:3000/ResetPassword?token=${token}`;
+      const resetLink = `http://localhost:3000/reset-password?token=${token}`;
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {

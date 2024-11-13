@@ -8,7 +8,7 @@ import {
   Image,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { fetchUserData } from "@/app/HomeUser/serviceHomeUser";
+import { fetchUserData } from "@/app/home/serviceHomeUser";
 import Cookies from 'js-cookie';
 
 const UserCard = () => {
@@ -27,7 +27,7 @@ const UserCard = () => {
         setUser(data.data);
       } else {
         console.error("No user data found, redirecting to login");
-        router.push("/Login");
+        router.push("/login");
       }
     };
     getUserData();
@@ -37,7 +37,7 @@ const UserCard = () => {
     Cookies.remove('myToken');
     const cookieEliminada = Cookies.get('myToken');
     if (!cookieEliminada) {
-      router.push('/Login')
+      router.push('/login')
     }
   };
 
