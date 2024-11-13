@@ -8,7 +8,7 @@ import {
   Image,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { fetchUserData } from "@/app/homeUser/serviceHomeUser";
+import { fetchUserData } from "@/app/home/serviceHomeUser";
 import Cookies from 'js-cookie';
 
 const UserCard = () => {

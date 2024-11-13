@@ -57,7 +57,7 @@ export default function Nav() {
           <Link
             className="text-sm lg:text-lg  hover:bg-yellow-400 p-5 rounded-full"
             color="foreground"
-            href="/ourStory"
+            href="/our-story"
           >
             Our Story
           </Link>
@@ -85,7 +85,7 @@ export default function Nav() {
           <Link
             className="text-sm lg:text-lg  hover:bg-yellow-400 p-5 rounded-full"
             color="foreground"
-            href="/contactUS"
+            href="/contact-us"
           >
             Contact Us
           </Link>

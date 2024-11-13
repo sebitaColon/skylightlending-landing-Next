@@ -22,7 +22,7 @@ export default function page() {
                     <a
                             className="w-10 rounded-3xl min-w-none bg-blue-600 shadow-lg"
                             color="primary"
-                            href='/Login'
+                            href='/login'
                         >
                             <Image src={volver} alt='volver'/>
                         </a>
