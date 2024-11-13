@@ -56,7 +56,7 @@ export default function Footer() {
 
         <div className="flex w-full h-16 justify-evenly md:justify-center">
           <Image
-            className="w-auto h-16 rounded-2xl"
+            className="w-auto h-16 rounded-xl"
             src={bbbLogo}
             alt="bbblogo"
           />
