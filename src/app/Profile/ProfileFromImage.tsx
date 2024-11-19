@@ -9,6 +9,7 @@ import imageProtada from '@/assets/img-body-contactus.jpg';
 import iconEdit from '@/assets/iconEdit.svg';
 import { useRouter } from "next/navigation";
 import { fetchUserData } from './serviceUser';
+import toast from 'react-hot-toast';
 
 export default function ProfileFromImage() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -52,7 +53,12 @@ export default function ProfileFromImage() {
                 body: formData,
             });
             const data = await response.json();
-            setImageUrl(data.imageUrl)
+            if(data.success){
+                toast.success(`${data.message}`)
+                setImageUrl(data.imageUrl)
+            }else{
+                toast.error(`${data.message}`)
+            }
         } catch (error) {
             console.error('Error uploading image:', error);
         } finally {
@@ -75,6 +81,7 @@ export default function ProfileFromImage() {
             setImageSrc('');
         }
     };
+
     return (
         <>
         <Avatar showFallback src={`${imageUrl }`} isBordered color='primary' className="w-20 h-20 text-large lg:w-36 lg:h-36 " />

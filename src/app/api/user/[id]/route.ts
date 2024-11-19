@@ -50,18 +50,20 @@ export async function POST(
         )
         .end(buffer);
     });
-    
-    console.log(response.secure_url);
-    const imageUrl = response.secure_url;
     const updatedUser = await prisma.user.update({
       where: { id: Number(id) },
       data: {
         image_url: response.secure_url, 
       },
     });
-    
+    if (!updatedUser) {
+      return new NextResponse(
+        JSON.stringify({ message: "Error image uploaded", success: false }),
+        { status: 400 }
+      );
+    }
     return new NextResponse(
-      JSON.stringify({ message: "Image uploaded successfully", success: true, imageUrl: imageUrl}),
+      JSON.stringify({ message: "Image uploaded successfully", success: true, imageUrl: response.secure_url}),
       { status: 200 }
     );
   } catch (error) {

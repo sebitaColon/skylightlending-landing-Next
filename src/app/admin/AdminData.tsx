@@ -83,7 +83,7 @@ export default function AdminData() {
             <p className="font-semibold text-center">{data.userAdmin.email}</p>
             <p className="font-semibold text-center">{data.userAdmin.role}</p>
           </DropdownItem>
-          <DropdownItem key="settings" href="/profile">My Settings</DropdownItem>
+          <DropdownItem key="settings" onClick={()=>router.push('/profile')}>My Settings</DropdownItem>
           <DropdownItem key="team_settings">Team Settings</DropdownItem>
           <DropdownItem key="configurations">Configurations</DropdownItem>
           <DropdownItem key="logout" color="danger" onClick={handleLogout}>
