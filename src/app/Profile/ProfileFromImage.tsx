@@ -1,5 +1,5 @@
 'use client';
-import { Avatar, Button } from '@nextui-org/react';
+import { Avatar, Button, user } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import imageCamera from '@/assets/imageCamera.svg';
@@ -11,6 +11,17 @@ import { useRouter } from "next/navigation";
 import { fetchUserData } from './serviceUser';
 import toast from 'react-hot-toast';
 
+interface User {
+    name: string,
+    last_name: string,
+    email: string;
+}
+
+interface UserState {
+    user: User | null;
+}
+
+
 export default function ProfileFromImage() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [fileName, setFileName] = useState<string | null>(null);
@@ -19,6 +30,7 @@ export default function ProfileFromImage() {
     const [imageUrl, setImageUrl] = useState<string>();
     const [file, setFile] = useState<File>()
     const [id, setId] = useState<number>()
+    const [data, setData] = useState<UserState>({ user: null });
     const router = useRouter();
 
     useEffect(() => {
@@ -28,6 +40,7 @@ export default function ProfileFromImage() {
                 if (!userData.success) {
                     router.push("/login");
                 }
+                setData({ user: userData.data })
                 setImageUrl(userData.data.image_url)
                 setImageSrc(userData.data.image_url)
                 setId(userData.data.id);
@@ -36,7 +49,7 @@ export default function ProfileFromImage() {
             }
         };
         fetchData();
-    }, [router]);
+    }, [router, isOpen]);
 
     const updateFileChange = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -53,10 +66,10 @@ export default function ProfileFromImage() {
                 body: formData,
             });
             const data = await response.json();
-            if(data.success){
+            if (data.success) {
                 toast.success(`${data.message}`)
                 setImageUrl(data.imageUrl)
-            }else{
+            } else {
                 toast.error(`${data.message}`)
             }
         } catch (error) {
@@ -65,7 +78,7 @@ export default function ProfileFromImage() {
             setUploading(false);
         }
     }
-    
+
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -84,9 +97,9 @@ export default function ProfileFromImage() {
 
     return (
         <>
-        <Avatar showFallback src={`${imageUrl }`} isBordered color='primary' className="w-20 h-20 text-large lg:w-36 lg:h-36 " />
+            <Avatar showFallback src={`${imageUrl}`} isBordered color='primary' className="w-20 h-20 text-large lg:w-36 lg:h-36 " />
             <Button onPress={onOpen} className='min-w-8 min-h-8 p-1 w-auto h-auto bg-blue-500 rounded-full absolute -bottom-2 z-10 -right-2 lg:w-12 lg:h-12' >
-                <Image src={imageCamera} alt='imgCamera'/>
+                <Image src={imageCamera} alt='imgCamera' />
             </Button>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop='blur'>
                 <form onSubmit={updateFileChange}>
@@ -100,7 +113,7 @@ export default function ProfileFromImage() {
                                             <div className='w-full h-full flex items-center justify-center relative overflow-hidden bg-blueFooter rounded-2xl'>
                                                 <h1 className='text-white text-base font-bold absolute top-3 z-20'>WELCOME!</h1>
                                                 <h1 className=' text-[10px] text-white font-bold absolute top-9 z-20' style={{ fontFamily: 'fantasy' }}>to my profile</h1>
-                                                <Image src={imageProtada} alt='imagePortada' className='object-cover w-full h-full -top-2/4 left-0 absolute'/>
+                                                <Image src={imageProtada} alt='imagePortada' className='object-cover w-full h-full -top-2/4 left-0 absolute' />
                                                 <span className='w-20 h-20 border-2 border-blue-500 absolute z-10 rounded-full object-cover bg-white overflow-hidden'
                                                 >
                                                     <Image
@@ -109,18 +122,20 @@ export default function ProfileFromImage() {
                                                         className='w-full h-full object-cover border-1 border-white rounded-full'
                                                         width={200}
                                                         height={200}
-                                                        />
+                                                    />
                                                 </span>
-                                                <div className='w-auto h-auto absolute gap-2 bottom-10 flex justify-between'>
-                                                    <span className='text-[8px] text-white '>Juan Garcia</span>
-                                                    <Button className='bg-transparent min-h-2 min-w-2 w-auto h-auto p-0' >
-                                                        <Image alt='imgIconEdit' src={iconEdit} className='w-2 h-2 '/>
-                                                    </Button>
+                                                <div className='w-auto h-auto absolute bottom-7 flex flex-col items-start'>
+                                                    <div className='w-auto h-auto gap-2 flex justify-between'>
+                                                        <span className='text-[8px] text-white '>{data.user?.name +' '+ data.user?.last_name}</span>
+                                                        <Button className='bg-transparent min-h-2 min-w-2 w-auto h-auto p-0' >
+                                                            <Image alt='imgIconEdit' src={iconEdit} className='w-2 h-2 ' />
+                                                        </Button>
+                                                    </div>
+                                                    <span className='text-[6px] text-gray-400'>{data.user?.email}</span>
                                                 </div>
-                                                <span className='text-[6px] absolute bottom-7 text-gray-400'>sebita03082003@gmail.com</span>
                                             </div>
                                         ) : (
-                                            <Image src={uploadFile} alt='upload'/>
+                                            <Image src={uploadFile} alt='upload' />
                                         )}
                                         <input onChange={handleFileChange} accept="image/*" type="file" className='w-full h-full absolute opacity-0 bg-red-400 flex items-center justify-center z-30' />
                                     </div>
