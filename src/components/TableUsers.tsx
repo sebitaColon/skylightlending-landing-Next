@@ -27,6 +27,7 @@ interface User {
   password: string;
   role: string;
   isActive: boolean;
+  image_url:string;
 }
 interface DecodedToken {
   id:number;
@@ -99,7 +100,7 @@ export default function TableUsers() {
                   name={`${user.name} ${user.last_name}`}
                   description={user.email}
                   avatarProps={{
-                    src: "",
+                    src: user.image_url,
                   }}
                 />
               </TableCell>

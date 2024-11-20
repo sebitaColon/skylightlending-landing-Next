@@ -18,6 +18,7 @@ interface UserAdmin {
   last_name: string,
   email: string;
   role: string; 
+  image_url: string;
 }
 
 interface AdminState {
@@ -73,7 +74,7 @@ export default function AdminData() {
             color="primary"
             name="Jason Hughes"
             size="sm"
-            src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+            src = {data.userAdmin.image_url}
           />
         </DropdownTrigger>
         <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -82,7 +83,7 @@ export default function AdminData() {
             <p className="font-semibold text-center">{data.userAdmin.email}</p>
             <p className="font-semibold text-center">{data.userAdmin.role}</p>
           </DropdownItem>
-          <DropdownItem key="settings" href="/profile">My Settings</DropdownItem>
+          <DropdownItem key="settings" onClick={()=>router.push('/profile')}>My Settings</DropdownItem>
           <DropdownItem key="team_settings">Team Settings</DropdownItem>
           <DropdownItem key="configurations">Configurations</DropdownItem>
           <DropdownItem key="logout" color="danger" onClick={handleLogout}>
