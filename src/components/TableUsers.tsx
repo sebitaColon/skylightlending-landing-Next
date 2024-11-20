@@ -10,6 +10,9 @@ import {
   TableCell,
   User,
   Button,
+  Input,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import Image from "next/image";
 import ModalEdit from "../app/admin/ModalEdit";
@@ -18,6 +21,8 @@ import { updateState } from "../app/admin/serviceAdmin";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import { SearchIcon } from "./UI/SearchIcon";
+import { useForm } from "react-hook-form";
 
 interface User {
   id: number;
@@ -42,6 +47,9 @@ export default function TableUsers() {
   const [userStatus, setUserStatus] = useState<boolean>();
   const [adminRole, setAdminRole] = useState('');
 
+  const [searchUser, setSearchUser] = useState('')
+  const [filterRole, setFilterRole] = useState('')
+
   const handleEditClick = (user: User) => {
     setSelectedUser(user);
     setIsModalOpen(true);
@@ -58,17 +66,24 @@ export default function TableUsers() {
         if (token) {
           const decoded: DecodedToken = jwtDecode(token);
           setAdminRole(decoded.role);
-          const resUsers = await fetch("/api/user");
+          const filterUser = { filter: searchUser, filterRole: filterRole};
+          const query = new URLSearchParams(filterUser).toString();
+          const resUsers = await fetch(`/api/user/?${query}`,{ 
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
           const usersData: User[] = await resUsers.json();
           const filteredUsers = usersData.filter(user => user.id !== decoded.id);
           setData({ users: filteredUsers });
         }
       } catch (error) {
-        router.push("/Login");
+        router.push("/login");
       }
     };
     fetchData();
-  }, [router, isModalOpen, userStatus]);
+  }, [router, isModalOpen, userStatus, searchUser, filterRole]);
 
   const handleStatusUser = async (status: boolean, id: number, adminRole:string) => {
     const estado = (!status);
@@ -81,8 +96,36 @@ export default function TableUsers() {
     }
   }
 
+  const role = [
+    {key: "", label: "View All"},
+    {key: "ADMIN", label: "Admin"},
+    {key: "MANAGER", label: "Manager"},
+    {key: "USER", label: "User"},
+  ];
+  
   return (
     <>
+      <div className="w-full pt-5 px-5 flex justify-end gap-2">
+      <Select
+            variant='flat'
+            placeholder="Select an Role"
+            className="max-w-xs"
+            onChange={(e)=> setFilterRole(e.target.value)}
+          >
+            {role.map((role) => (
+              <SelectItem key={role.key}>
+                {role.label}
+              </SelectItem>
+            ))}
+          </Select>
+        <Input className="max-w-[300px]"  
+          placeholder="Search User"
+          onChange={(e) => setSearchUser(e.target.value)}
+          startContent={
+        <SearchIcon/>
+        }>
+        </Input>
+      </div>
       <Table className="m-5 w-auto" aria-label="Users Table">
         <TableHeader>
           <TableColumn>id</TableColumn>
