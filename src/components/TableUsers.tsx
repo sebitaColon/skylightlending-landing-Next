@@ -22,7 +22,6 @@ import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { SearchIcon } from "./UI/SearchIcon";
-import { useForm } from "react-hook-form";
 
 interface User {
   id: number;
@@ -32,10 +31,10 @@ interface User {
   password: string;
   role: string;
   isActive: boolean;
-  image_url:string;
+  image_url: string;
 }
 interface DecodedToken {
-  id:number;
+  id: number;
   role: string;
 }
 
@@ -49,6 +48,7 @@ export default function TableUsers() {
 
   const [searchUser, setSearchUser] = useState('')
   const [filterRole, setFilterRole] = useState('')
+  const [filterIsActive, setFilterIsActive] = useState('')
 
   const handleEditClick = (user: User) => {
     setSelectedUser(user);
@@ -66,9 +66,9 @@ export default function TableUsers() {
         if (token) {
           const decoded: DecodedToken = jwtDecode(token);
           setAdminRole(decoded.role);
-          const filterUser = { filter: searchUser, filterRole: filterRole};
+          const filterUser = { filter: searchUser, filterRole: filterRole, filterIsActive:filterIsActive };
           const query = new URLSearchParams(filterUser).toString();
-          const resUsers = await fetch(`/api/user/?${query}`,{ 
+          const resUsers = await fetch(`/api/user/?${query}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -83,9 +83,9 @@ export default function TableUsers() {
       }
     };
     fetchData();
-  }, [router, isModalOpen, userStatus, searchUser, filterRole]);
+  }, [router, isModalOpen, userStatus, searchUser, filterRole, filterIsActive]);
 
-  const handleStatusUser = async (status: boolean, id: number, adminRole:string) => {
+  const handleStatusUser = async (status: boolean, id: number, adminRole: string) => {
     const estado = (!status);
     setUserStatus(!userStatus);
     const result = await updateState(estado, id, adminRole)
@@ -97,28 +97,46 @@ export default function TableUsers() {
   }
 
   const role = [
-    {key: "", label: "View All"},
-    {key: "ADMIN", label: "Admin"},
-    {key: "MANAGER", label: "Manager"},
-    {key: "USER", label: "User"},
+    { key: "", label: "View All" },
+    { key: "ADMIN", label: "Admin" },
+    { key: "MANAGER", label: "Manager" },
+    { key: "USER", label: "User" },
   ];
-  
+
+  const isActive = [
+    { key: "", label: "View All" },
+    { key: "true", label: "true" },
+    { key: "false", label: "false" },
+  ];
+
   return (
     <>
       <div className="w-full pt-5 px-5 flex justify-end gap-2">
-      <Select
-            variant='flat'
-            placeholder="Select an Role"
-            className="max-w-xs"
-            onChange={(e)=> setFilterRole(e.target.value)}
-          >
-            {role.map((role) => (
-              <SelectItem key={role.key}>
-                {role.label}
-              </SelectItem>
-            ))}
-          </Select>
-        <Input className="max-w-[300px]"  
+        <Select
+          variant='flat'
+          className="max-w-xs"
+          placeholder="Select an Status"
+          onChange={(e) => setFilterIsActive(e.target.value)}
+        >
+          {isActive.map((isActive) => (
+            <SelectItem key={isActive.key}>
+              {isActive.label}
+            </SelectItem>
+          ))}
+        </Select>
+        <Select
+          variant='flat'
+          placeholder="Select an Role"
+          className="max-w-xs"
+          onChange={(e) => setFilterRole(e.target.value)}
+        >
+          {role.map((role) => (
+            <SelectItem key={role.key}>
+              {role.label}
+            </SelectItem>
+          ))}
+        </Select>
+        <Input className="max-w-[300px]"
           placeholder="Search User"
           onChange={(e) => setSearchUser(e.target.value)}
           startContent={

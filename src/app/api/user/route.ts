@@ -6,6 +6,8 @@ export async function GET(request:NextRequest) {
   const { searchParams } = request.nextUrl ;
   const filter = searchParams.get('filter') || undefined;
   const filterRole = searchParams.get('filterRole') || undefined;
+  const filterIsActiveParam = searchParams.get('filterIsActive');
+  const filterIsActive = filterIsActiveParam === 'true' ? true : filterIsActiveParam === 'false' ? false : undefined;
 
   try {
   const where: any = {};
@@ -13,14 +15,17 @@ export async function GET(request:NextRequest) {
   if (filter) {
     conditions.push({
       OR: [
-        { name: { contains: filter, mode: 'insensitive' } },
-        { last_name: { contains: filter, mode: 'insensitive' } },
-        { email: { contains: filter, mode: 'insensitive' } },
+        { name: { contains: filter } },
+        { last_name: { contains: filter } },
+        { email: { contains: filter } },
       ],
     });
   }
   if (filterRole) {
-    conditions.push({ role: { contains: filterRole, mode: 'insensitive' } });
+    conditions.push({ role: { contains: filterRole } });
+  }
+  if (filterIsActive !== undefined) {
+    conditions.push({ isActive: filterIsActive });
   }
   if (conditions.length > 0) {
     where.AND = conditions;
