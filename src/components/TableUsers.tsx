@@ -27,20 +27,24 @@ interface User {
   password: string;
   role: string;
   isActive: boolean;
-  image_url:string;
+  image_url: string;
 }
 interface DecodedToken {
-  id:number;
+  id: number;
   role: string;
 }
 
-export default function TableUsers() {
+interface TableUsersProps {
+  currentPage: number; 
+}
+
+export default function TableUsers({ currentPage }: TableUsersProps) {
   const [data, setData] = useState<{ users: User[] }>({ users: [] });
   const router = useRouter();
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userStatus, setUserStatus] = useState<boolean>();
-  const [adminRole, setAdminRole] = useState('');
+  const [adminRole, setAdminRole] = useState("");
 
   const handleEditClick = (user: User) => {
     setSelectedUser(user);
@@ -58,9 +62,11 @@ export default function TableUsers() {
         if (token) {
           const decoded: DecodedToken = jwtDecode(token);
           setAdminRole(decoded.role);
-          const resUsers = await fetch("/api/user");
+
+          
+          const resUsers = await fetch(`/api/user?page=${currentPage}`);
           const usersData: User[] = await resUsers.json();
-          const filteredUsers = usersData.filter(user => user.id !== decoded.id);
+          const filteredUsers = usersData.filter((user) => user.id !== decoded.id);
           setData({ users: filteredUsers });
         }
       } catch (error) {
@@ -68,18 +74,17 @@ export default function TableUsers() {
       }
     };
     fetchData();
-  }, [router, isModalOpen, userStatus]);
-
-  const handleStatusUser = async (status: boolean, id: number, adminRole:string) => {
-    const estado = (!status);
+  }, [router, isModalOpen, userStatus, currentPage]);
+  const handleStatusUser = async (status: boolean, id: number, adminRole: string) => {
+    const estado = !status;
     setUserStatus(!userStatus);
-    const result = await updateState(estado, id, adminRole)
+    const result = await updateState(estado, id, adminRole);
     if (!result.success) {
       toast.error(`${result.message}`);
     } else {
       toast.success(`${result.message}`);
     }
-  }
+  };
 
   return (
     <>
@@ -107,34 +112,34 @@ export default function TableUsers() {
               <TableCell>{user.role}</TableCell>
               <TableCell>
                 <div className="flex gap-2 items-center">
-                  {adminRole === 'MANAGER' && user.role === 'ADMIN' ?
-                    <Button isDisabled
-                      className="bg-yellow-400 w-auto min-w-0"
-                    >
-                      <Image src={EditIcon} alt={"Edit Icon"}></Image>
+                  {adminRole === "MANAGER" && user.role === "ADMIN" ? (
+                    <Button isDisabled className="bg-yellow-400 w-auto min-w-0">
+                      <Image src={EditIcon} alt={"Edit Icon"} />
                     </Button>
-                    :
+                  ) : (
                     <Button
                       onClick={() => handleEditClick(user)}
                       className="bg-yellow-400 w-auto min-w-0"
                     >
-                      <Image src={EditIcon} alt={"Edit Icon"}></Image>
+                      <Image src={EditIcon} alt={"Edit Icon"} />
                     </Button>
-                  }
+                  )}
                 </div>
               </TableCell>
               <TableCell>
-                {adminRole === 'MANAGER' && user.role === 'ADMIN' ?
-                  <Button isDisabled variant="flat" color={user.isActive ? 'success' : 'danger'}>
+                {adminRole === "MANAGER" && user.role === "ADMIN" ? (
+                  <Button isDisabled variant="flat" color={user.isActive ? "success" : "danger"}>
                     {`${user.isActive}`}
                   </Button>
-                  :
-                  <Button onClick={() => handleStatusUser(user.isActive, user.id, adminRole)
-                  } color={user.isActive ? 'success' : 'danger'
-                  } variant="flat">
+                ) : (
+                  <Button
+                    onClick={() => handleStatusUser(user.isActive, user.id, adminRole)}
+                    color={user.isActive ? "success" : "danger"}
+                    variant="flat"
+                  >
                     {`${user.isActive}`}
                   </Button>
-                }
+                )}
               </TableCell>
             </TableRow>
           ))}
