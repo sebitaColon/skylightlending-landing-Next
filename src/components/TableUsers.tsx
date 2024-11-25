@@ -93,7 +93,7 @@ export default function TableUsers() {
         </TableHeader>
         <TableBody emptyContent="No rows to display.">
           {data.users.map((user, index) => (
-            <TableRow key={index}>
+            <TableRow key={index} className="hover:bg-gray-100" href={`http://localhost:3000/profile/${user.id}`}>
               <TableCell>{user.id}</TableCell>
               <TableCell>
                 <User
