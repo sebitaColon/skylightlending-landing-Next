@@ -2,14 +2,40 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
-  const page = Number(req.nextUrl.searchParams.get("page") || "1"); 
+export async function GET(request:NextRequest) { 
+  const page = Number(request.nextUrl.searchParams.get("page") || "1"); 
   const pageSize = 10; 
+  const { searchParams } = request.nextUrl ;
+  const filter = searchParams.get('filter') || undefined;
+  const filterRole = searchParams.get('filterRole') || undefined;
+  const filterIsActiveParam = searchParams.get('filterIsActive');
+  const filterIsActive = filterIsActiveParam === 'true' ? true : filterIsActiveParam === 'false' ? false : undefined;
 
   try {
+  const where: any = {};
+  const conditions: any[] = [];
+  if (filter) {
+    conditions.push({
+      OR: [
+        { name: { contains: filter } },
+        { last_name: { contains: filter } },
+        { email: { contains: filter } },
+      ],
+    });
+  }
+  if (filterRole) {
+    conditions.push({ role: { contains: filterRole } });
+  }
+  if (filterIsActive !== undefined) {
+    conditions.push({ isActive: filterIsActive });
+  }
+  if (conditions.length > 0) {
+    where.AND = conditions;
+  }
     const usuarios = await prisma.user.findMany({
       skip: (page - 1) * pageSize,
       take: pageSize,
+      where,
       orderBy: {
         id: "asc",
       },
