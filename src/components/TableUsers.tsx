@@ -8,6 +8,8 @@ import UserTable from "./UserTable";
 import ModalEdit from "../app/admin/ModalEdit";
 import { updateState } from "../app/admin/serviceAdmin";
 import toast from "react-hot-toast";
+import PaginationComponent from "./UI/PaginationComponent";
+import { user } from "@nextui-org/react";
 
 interface User {
   id: number;
@@ -16,10 +18,10 @@ interface User {
   email: string;
   role: string;
   isActive: boolean;
-  image_url: string;
+  image_url:  string;
 }
 interface DecodedToken {
-  id: number;
+  id:  number;
   role: string;
 }
 
@@ -28,13 +30,16 @@ export default function TableUsers() {
   const [adminRole, setAdminRole] = useState("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [searchUser, setSearchUser] = useState<string>('')
   const [filterRole, setFilterRole] = useState<string>('')
   const [filterIsActive, setFilterIsActive] = useState<string>('')
+  const [totalPages, setTotalPages] = useState(1);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
   const router = useRouter();
-
   const fetchData = async () => {
     const token = Cookies.get("myToken");
     try {
@@ -43,9 +48,10 @@ export default function TableUsers() {
         setAdminRole(decoded.role);
         const filterUser = { filter: searchUser, filterRole: filterRole, filterIsActive:filterIsActive };
         const query = new URLSearchParams(filterUser).toString();
-        const res = await fetch(`/api/user/?${query}`);
-        const users: User[] = await res.json();
-        setData(users.filter((user) => user.id !== decoded.id));
+        const res = await fetch(`/api/user/?${query}&page=${currentPage}&id=${decoded.id}`);
+        const { usuarios, totalPages } = await res.json();
+        setData(usuarios);
+        setTotalPages(totalPages); 
       }
     } catch (error) {
       router.push("/login");
@@ -54,7 +60,7 @@ export default function TableUsers() {
 
   useEffect(() => {
     fetchData();
-  }, [isModalOpen, searchUser, filterRole, filterIsActive]);
+  }, [isModalOpen, searchUser, filterRole, filterIsActive, currentPage]);
 
   const handleStatusToggle = async (id: number, isActive: boolean) => {
     const result = await updateState(!isActive, id, adminRole);
@@ -91,6 +97,11 @@ export default function TableUsers() {
           setIsModalOpen(true);
         }}
         onStatusToggle={handleStatusToggle}
+      />
+       <PaginationComponent 
+        currentPage={currentPage} 
+        totalPages={totalPages}
+        handlePageChange={handlePageChange} 
       />
       {isModalOpen && selectedUser && (
         <ModalEdit

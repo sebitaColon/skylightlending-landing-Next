@@ -3,6 +3,8 @@ const prisma = new PrismaClient();
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request:NextRequest) { 
+  const page = Number(request.nextUrl.searchParams.get("page") || "1"); 
+  const userSession = Number(request.nextUrl.searchParams.get("id")); 
   const { searchParams } = request.nextUrl ;
   const filter = searchParams.get('filter') || undefined;
   const filterRole = searchParams.get('filterRole') || undefined;
@@ -30,14 +32,27 @@ export async function GET(request:NextRequest) {
   if (conditions.length > 0) {
     where.AND = conditions;
   }
-    const usuarios = await prisma.user.findMany({
+    where.NOT = { id: userSession};
+
+    const userCountTotal = await prisma.user.count({
       where,
-      orderBy:{
-        id: 'asc'
-      }
     });
-    return new NextResponse(JSON.stringify(usuarios), { status: 201 });
-  } catch (e) {
+    const totalPages = Math.ceil(userCountTotal / 10)
+
+    const usuarios = await prisma.user.findMany({
+      skip: (page - 1) * 10,
+      take: 10,
+      where,
+      orderBy: {
+        id: "asc",
+      },
+    });
+
+      return new NextResponse(
+        JSON.stringify({ usuarios, totalPages }),
+        { status: 200 }
+      );
+    } catch (e) {
     return new NextResponse(
       JSON.stringify({ error: "Internal server error" }),
       { status: 500 }
@@ -46,3 +61,4 @@ export async function GET(request:NextRequest) {
     await prisma.$disconnect();
   }
 }
+
