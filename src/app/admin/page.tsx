@@ -1,4 +1,3 @@
-"use client";
 import {
   Navbar,
   NavbarBrand,
@@ -9,17 +8,8 @@ import AcmeLogo from "../../assets/logo/logo.png";
 import Image from "next/image";
 import TableUsers from "../../components/TableUsers";
 import AdminData from "./AdminData";
-import { useState } from "react";
-import PaginationComponent from "@/components/UI/PaginationComponent";
-
 
 export default function Admin() {
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   return (
     <div>
       <Navbar className="bg-blue-500">
@@ -36,11 +26,7 @@ export default function Admin() {
           <AdminData />
         </NavbarContent>
       </Navbar>
-      <TableUsers currentPage={currentPage} />
-      <PaginationComponent 
-        currentPage={currentPage} 
-        handlePageChange={handlePageChange} 
-      />
+      <TableUsers/>
     </div>
   );
 }

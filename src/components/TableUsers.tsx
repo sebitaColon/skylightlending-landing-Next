@@ -8,6 +8,8 @@ import UserTable from "./UserTable";
 import ModalEdit from "../app/admin/ModalEdit";
 import { updateState } from "../app/admin/serviceAdmin";
 import toast from "react-hot-toast";
+import PaginationComponent from "./UI/PaginationComponent";
+import { user } from "@nextui-org/react";
 
 interface User {
   id: number;
@@ -23,11 +25,7 @@ interface DecodedToken {
   role: string;
 }
 
-interface TableUsersProps {
-  currentPage: number; 
-}
-
-export default function TableUsers({ currentPage }: TableUsersProps) {
+export default function TableUsers() {
   const [data, setData] = useState<User[]>([]);
   const [adminRole, setAdminRole] = useState("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -36,8 +34,11 @@ export default function TableUsers({ currentPage }: TableUsersProps) {
   const [filterRole, setFilterRole] = useState<string>('')
   const [filterIsActive, setFilterIsActive] = useState<string>('')
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
   const router = useRouter();
-
   const fetchData = async () => {
     const token = Cookies.get("myToken");
     try {
@@ -46,9 +47,9 @@ export default function TableUsers({ currentPage }: TableUsersProps) {
         setAdminRole(decoded.role);
         const filterUser = { filter: searchUser, filterRole: filterRole, filterIsActive:filterIsActive };
         const query = new URLSearchParams(filterUser).toString();
-        const res = await fetch(`/api/user/?${query}&page=${currentPage}`);
+        const res = await fetch(`/api/user/?${query}&page=${currentPage}&id=${decoded.id}`);
         const users: User[] = await res.json();
-        setData(users.filter((user) => user.id !== decoded.id));
+        setData(users);
       }
     } catch (error) {
       router.push("/login");
@@ -94,6 +95,10 @@ export default function TableUsers({ currentPage }: TableUsersProps) {
           setIsModalOpen(true);
         }}
         onStatusToggle={handleStatusToggle}
+      />
+       <PaginationComponent 
+        currentPage={currentPage} 
+        handlePageChange={handlePageChange} 
       />
       {isModalOpen && selectedUser && (
         <ModalEdit

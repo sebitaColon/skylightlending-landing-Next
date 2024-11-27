@@ -10,6 +10,7 @@ const PaginationComponent: React.FC<PaginationComponent> = ({
   currentPage,
   handlePageChange,
 }) => {
+  
   return (
     <Pagination
       className="flex justify-center fixed bottom-2 left-0 w-full"

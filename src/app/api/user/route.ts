@@ -4,12 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request:NextRequest) { 
   const page = Number(request.nextUrl.searchParams.get("page") || "1"); 
-  let pageSize = 0; 
-  if (page === 1){
-    pageSize = 11;
-  }else{
-    pageSize = 10;
-  }
+  const userSession = Number(request.nextUrl.searchParams.get("id")); 
   const { searchParams } = request.nextUrl ;
   const filter = searchParams.get('filter') || undefined;
   const filterRole = searchParams.get('filterRole') || undefined;
@@ -37,9 +32,11 @@ export async function GET(request:NextRequest) {
   if (conditions.length > 0) {
     where.AND = conditions;
   }
+    where.NOT = { id: userSession};
+
     const usuarios = await prisma.user.findMany({
-      skip: (page - 1) * pageSize,
-      take: pageSize,
+      skip: (page - 1) * 10,
+      take: 10,
       where,
       orderBy: {
         id: "asc",
