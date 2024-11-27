@@ -24,7 +24,7 @@ export default function Nav() {
     "Contact US",
   ];
 
-  const menuItemsLink = ["Installer", "OurStory", "News", "Login", "ContactUS"];
+  const menuItemsLink = ["installer", "ourStory", "news", "login", "contactUS"];
 
   return (
     <Navbar
@@ -48,7 +48,7 @@ export default function Nav() {
           <Link
             className=" text-sm  lg:text-lg hover:bg-yellow-400 p-5 rounded-full"
             color="foreground"
-            href="/Installer"
+            href="/installer"
           >
             Installer/Dealer Application
           </Link>
@@ -57,7 +57,7 @@ export default function Nav() {
           <Link
             className="text-sm lg:text-lg  hover:bg-yellow-400 p-5 rounded-full"
             color="foreground"
-            href="/OurStory"
+            href="/our-story"
           >
             Our Story
           </Link>
@@ -65,7 +65,7 @@ export default function Nav() {
         <NavbarItem>
           <Link
             className="text-sm lg:text-lg hover:bg-yellow-400 p-5 rounded-full"
-            href="/News"
+            href="/news"
             color="foreground"
             aria-current="page"
           >
@@ -76,7 +76,7 @@ export default function Nav() {
           <Link
             className="text-sm  lg:text-lg hover:bg-yellow-400 p-5 rounded-full"
             color="foreground"
-            href="/Login"
+            href="/login"
           >
             Login
           </Link>
@@ -85,7 +85,7 @@ export default function Nav() {
           <Link
             className="text-sm lg:text-lg  hover:bg-yellow-400 p-5 rounded-full"
             color="foreground"
-            href="/ContactUS"
+            href="/contact-us"
           >
             Contact Us
           </Link>

@@ -29,7 +29,7 @@ export async function handleForgotPassword(email: string) {
         },
         JWT_SECRET
       );
-      const resetLink = `http://localhost:3000/ResetPassword?token=${token}`;
+      const resetLink = `http://localhost:3000/reset-password?token=${token}`;
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -45,8 +45,18 @@ export async function handleForgotPassword(email: string) {
         to: email,
         subject: "Restablecer tu contraseña",
         text: `Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace para continuar: ${resetLink}`,
-        html: `<p>Has solicitado restablecer tu contraseña.</p><p><a href="${resetLink}">Haz clic aquí para restablecer tu contraseña</a></p>`,
-      };
+        html: `
+          <table style="width: 100%; height: 100%; min-height:screen; text-align: center;">
+            <tr>
+              <td style="background-image: url('https://res.cloudinary.com/dupcxxv9f/image/upload/v1732540303/img-body-contactus_eink5r.jpg'); background-size: cover; background-repeat: no-repeat;  margin-top: 20px;">
+                <img src="https://res.cloudinary.com/dupcxxv9f/image/upload/v1732540870/logo-footer_rxvq3t.png" alt="Logo" style="width: 250px; margin-bottom: 20px;" />
+                <p style="color: #ffffff; font-size: 1.5rem;">Has solicitado restablecer tu contraseña.</p>
+                <a href="${resetLink}" style="display: inline-block; font-size: 1rem; color: #007bff; text-decoration: none; background-color: #ffffff; border-radius: 20px; padding: 10px 20px; margin-bottom: 20px;">Restablecer contraseña</a>
+              </td>
+            </tr>
+          </table>
+        `,
+        };
       await transporter.sendMail(mailOptions);
   
       return new NextResponse(

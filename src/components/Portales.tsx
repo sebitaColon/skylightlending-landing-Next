@@ -6,28 +6,28 @@ function Portales() {
       <Button
         radius="full"
         variant="shadow"
-        className="bg-yellow-400 m-1 hover:bg-yellow-200 sm:size-1/5 md:text-lg md:size-1/4 lg:size-1/3 lg:m-3 lg:text-2xl"
+        className="bg-yellow-400 m-1 hover:bg-yellow-200 sm:size-1/5 md:text-lg md:size-1/4 lg:size-1/4 lg:m-3 lg:text-2xl"
       >
         Borrower
       </Button>
       <Button
         radius="full"
         variant="shadow"
-        className="bg-yellow-400 m-1 hover:bg-yellow-200 sm:size-1/5 md:text-lg md:size-1/4 lg:size-1/3 lg:m-3 lg:text-2xl"
+        className="bg-yellow-400 m-1 hover:bg-yellow-200 sm:size-1/5 md:text-lg md:size-1/4 lg:size-1/4 lg:m-3 lg:text-2xl"
       >
         Installer
       </Button>
       <Button
         radius="full"
         variant="shadow"
-        className="bg-yellow-400 m-1 hover:bg-yellow-200 sm:size-1/5 md:text-lg md:size-1/4 lg:size-1/3 lg:m-3 lg:text-2xl"
+        className="bg-yellow-400 m-1 hover:bg-yellow-200 sm:size-1/5 md:text-lg md:size-1/4 lg:size-1/4 lg:m-3 lg:text-2xl"
       >
         Supplier
       </Button>
       <Button
         radius="full"
         variant="shadow"
-        className="bg-yellow-400 m-1 hover:bg-yellow-200 sm:size-1/5 md:text-lg md:size-1/4 lg:size-1/3 lg:m-3 lg:text-2xl"
+        className="bg-yellow-400 m-1 hover:bg-yellow-200 sm:size-1/5 md:text-lg md:size-1/4 lg:size-1/4 lg:m-3 lg:text-2xl"
       >
         Salesperson
       </Button>

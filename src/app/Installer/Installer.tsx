@@ -49,7 +49,7 @@ export default function Installer() {
       >
         <h1 className="font-InterBold text-center text-black text-md sm:text-3xl pb-10 mb-5 border-b-1">
           <span className="text-blue-600 pr-1">Skylight Lending New</span>
-          Dealer Application
+          <span className="dark:text-white">Dealer Application</span>
         </h1>
         <div className="w-full grid sm:grid-cols-2  sm:grid-rows-4 gap-x-5 dark:bg-black">
           <div className="h-auto flex flex-col">

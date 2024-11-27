@@ -1,123 +1,114 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  User,
-  Button,
-} from "@nextui-org/react";
-import Image from "next/image";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import FilterBar from "./FilterBar";
+import UserTable from "./UserTable";
 import ModalEdit from "../app/admin/ModalEdit";
-import EditIcon from "@/assets/iconEdit.svg";
 import { updateState } from "../app/admin/serviceAdmin";
 import toast from "react-hot-toast";
+import PaginationComponent from "./UI/PaginationComponent";
+import { user } from "@nextui-org/react";
 
 interface User {
   id: number;
   name: string;
   last_name: string;
   email: string;
-  password: string;
   role: string;
   isActive: boolean;
+  image_url:  string;
+}
+interface DecodedToken {
+  id:  number;
+  role: string;
 }
 
 export default function TableUsers() {
-  const [data, setData] = useState<{ users: User[] }>({ users: [] });
-  const router = useRouter();
+  const [data, setData] = useState<User[]>([]);
+  const [adminRole, setAdminRole] = useState("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userStatus, setUserStatus] = useState<boolean>();
+  const [searchUser, setSearchUser] = useState<string>('')
+  const [filterRole, setFilterRole] = useState<string>('')
+  const [filterIsActive, setFilterIsActive] = useState<string>('')
+  const [totalPages, setTotalPages] = useState(1);
 
-  const handleEditClick = (user: User) => {
-    setSelectedUser(user);
-    setIsModalOpen(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedUser(null);
+  const router = useRouter();
+  const fetchData = async () => {
+    const token = Cookies.get("myToken");
+    try {
+      if (token) {
+        const decoded: DecodedToken = jwtDecode(token);
+        setAdminRole(decoded.role);
+        const filterUser = { filter: searchUser, filterRole: filterRole, filterIsActive:filterIsActive };
+        const query = new URLSearchParams(filterUser).toString();
+        const res = await fetch(`/api/user/?${query}&page=${currentPage}&id=${decoded.id}`);
+        const { usuarios, totalPages } = await res.json();
+        setData(usuarios);
+        setTotalPages(totalPages); 
+      }
+    } catch (error) {
+      router.push("/login");
+    }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const resUsers = await fetch("/api/user");
-        const usersData: User[] = await resUsers.json();
-        setData({ users: usersData });
-      } catch (error) {
-        router.push("/Login");
-      }
-    };
     fetchData();
-  }, [router, isModalOpen, userStatus]);
+  }, [isModalOpen, searchUser, filterRole, filterIsActive, currentPage]);
 
-  const handleStatusUser = async (status: boolean, id:number) => {
-    const estado = (!status);
-    setUserStatus(!userStatus);
-    const result = await updateState(estado,id)
-    if(!result.success) {
-      toast.error(`${result.message}`);
+  const handleStatusToggle = async (id: number, isActive: boolean) => {
+    const result = await updateState(!isActive, id, adminRole);
+    if (result.success) {
+      toast.success(result.message);
     } else {
-      toast.success(`${result.message}`);
+      toast.error(result.message);
     }
-  }
+    fetchData();
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchUser(value);
+  };
+  const handleRoleChange = (value: string) => {
+    setFilterRole(value);
+  };
+  const handleStatusChange = (value: string) => {
+    setFilterIsActive(value);
+  };
 
   return (
     <>
-      <Table className="m-5 w-auto" aria-label="Users Table">
-        <TableHeader>
-          <TableColumn>id</TableColumn>
-          <TableColumn>User</TableColumn>
-          <TableColumn>Role</TableColumn>
-          <TableColumn>Actions</TableColumn>
-          <TableColumn>Active</TableColumn>
-        </TableHeader>
-        <TableBody emptyContent="No rows to display.">
-          {data.users.map((user, index) => (
-            <TableRow key={index}>
-              <TableCell>{user.id}</TableCell>
-              <TableCell>
-                <User
-                  name={`${user.name} ${user.last_name}`}
-                  description={user.email}
-                  avatarProps={{
-                    src: "",
-                  }}
-                />
-              </TableCell>
-              <TableCell>{user.role}</TableCell>
-              <TableCell>
-                {" "}
-                <div className="flex gap-2 items-center">
-                  <Button
-                    onClick={() => handleEditClick(user)}
-                    className="bg-yellow-400 w-auto min-w-0"
-                  >
-                    <Image src={EditIcon} alt={"Edit Icon"}></Image>
-                  </Button>
-                </div>
-              </TableCell>
-              <TableCell>
-                  <Button onClick={() => handleStatusUser(user.isActive,user.id)
-                  } color={user.isActive? 'success':'danger'
-                  }variant="flat">
-                    {`${user.isActive}`}
-                    </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <FilterBar
+        onSearchChange={handleSearchChange}
+        onRoleChange={handleRoleChange}
+        onStatusChange={handleStatusChange}
+      />
+      <UserTable
+        users={data}
+        adminRole={adminRole}
+        onEditClick={(user) => {
+          setSelectedUser(user);
+          setIsModalOpen(true);
+        }}
+        onStatusToggle={handleStatusToggle}
+      />
+       <PaginationComponent 
+        currentPage={currentPage} 
+        totalPages={totalPages}
+        handlePageChange={handlePageChange} 
+      />
       {isModalOpen && selectedUser && (
         <ModalEdit
           user={selectedUser}
           isOpen={isModalOpen}
-          onClose={handleCloseModal}
+          onClose={() => setIsModalOpen(false)}
+          adminRole={adminRole}
         />
       )}
     </>

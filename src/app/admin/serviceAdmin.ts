@@ -1,12 +1,12 @@
 export const updateState = async (estado: boolean,
-    id: number) => {
+    id: number, adminRole: string) => {
     const action = "updateState"
     const response = await fetch(`http://localhost:3000/api/user/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({estado, action}),
+      body: JSON.stringify({estado, action, adminRole}),
     });
     if (!response.ok) {
       throw new Error('Failed in update user');

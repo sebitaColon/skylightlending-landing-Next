@@ -9,7 +9,7 @@ function Banner() {
       <div className={`${style.banner} absolute bg-background -bottom-1 w-full h-[30%] z-10`}>
         {" "}
       </div>
-      <div className={`${style.banner} absolute rotate-180 bg-background -top-0 w-full h-[30%] z-10`} >
+      <div className={`${style.banner} absolute rotate-180 bg-background -top-1 w-full h-[30%] z-10`} >
         {" "}
       </div>
       <Image className="h-full w-full object-cover" src={ImgBanner} alt="" />

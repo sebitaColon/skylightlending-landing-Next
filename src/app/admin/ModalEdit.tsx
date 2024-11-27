@@ -13,6 +13,8 @@ import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import toast from "react-hot-toast";
 import { updateUser } from "./serviceAdmin";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { modalEditValition } from "@/validation/modalEdit";
 
 interface User {
   id: number;
@@ -26,16 +28,20 @@ interface ModalEditProps {
   user: User;
   isOpen: boolean;
   onClose: () => void;
+  adminRole: string;
 }
 
-export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
-  const [id, setId ] = useState(user.id)
+
+export default function ModalEdit({ user, isOpen, onClose, adminRole }: ModalEditProps) {
+  const [id, setId] = useState(user.id)
+
   const {
     handleSubmit,
     control,
     setValue,
     formState: { errors },
   } = useForm({
+    resolver: yupResolver(modalEditValition),
     defaultValues: {
       name: user.name,
       last_name: user.last_name,
@@ -54,7 +60,7 @@ export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
 
   const handleSave = async (data: any) => {
     try {
-      const result = await updateUser({...data, id});
+      const result = await updateUser({ ...data, id, adminRole });
       if (!result.success) {
         toast.error(`${result.message}`);
       } else {
@@ -111,6 +117,7 @@ export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
               className="flex flex-col gap-y-4"
             >
               {inputFields.map((field, index) => (
+               <div key={index} className="flex flex-col gap-2">
                 <Controller
                   key={index}
                   name={field.name}
@@ -125,6 +132,12 @@ export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
                     />
                   )}
                 />
+                {errors[field.name] && (
+                    <p className="text-red-500">
+                      {errors[field.name]?.message}
+                    </p>
+                )}
+                </div>
               ))}
               <Controller
                 name="role"
@@ -135,7 +148,7 @@ export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
                     label="Select a role"
                     defaultSelectedKeys={[field.value]}
                   >
-                    <SelectItem key={"ADMIN"} value="ADMIN">
+                    <SelectItem className={`${adminRole === 'MANAGER' ? 'hidden' : ''}`} key={"ADMIN"} value="ADMIN">
                       ADMIN
                     </SelectItem>
                     <SelectItem key={"MANAGER"} value="MANAGER">
@@ -147,6 +160,11 @@ export default function ModalEdit({ user, isOpen, onClose }: ModalEditProps) {
                   </Select>
                 )}
               />
+              {errors.role && (
+                <p className="text-red-500">
+                  {errors.role?.message}
+                </p>
+              )}
               <ModalFooter>
                 <Button color="danger" variant="flat" onPress={onClose}>
                   Cancel
