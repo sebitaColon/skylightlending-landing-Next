@@ -12,7 +12,7 @@ const PaginationComponent: React.FC<PaginationComponent> = ({
 }) => {
   return (
     <Pagination
-      className="flex justify-center fixed bottom-10 left-0 w-full z-10"
+      className="flex justify-center fixed bottom-2 left-0 w-full"
       showControls
       total={10}
       initialPage={1}

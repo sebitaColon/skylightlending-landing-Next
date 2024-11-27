@@ -4,7 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request:NextRequest) { 
   const page = Number(request.nextUrl.searchParams.get("page") || "1"); 
-  const pageSize = 10; 
+  let pageSize = 0; 
+  if (page === 1){
+    pageSize = 11;
+  }else{
+    pageSize = 10;
+  }
   const { searchParams } = request.nextUrl ;
   const filter = searchParams.get('filter') || undefined;
   const filterRole = searchParams.get('filterRole') || undefined;
