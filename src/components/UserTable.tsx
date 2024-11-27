@@ -45,7 +45,7 @@ export default function UserTable({
             </TableHeader>
             <TableBody emptyContent="No rows to display.">
                 {users.map((user) => (
-                    <TableRow key={user.id}>
+                    <TableRow key={user.id} className="hover:bg-gray-200/75" href={`/profile/${user.id}`}>
                         <TableCell>{user.id}</TableCell>
                         <TableCell>
                             <User

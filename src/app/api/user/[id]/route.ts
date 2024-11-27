@@ -6,6 +6,61 @@ import { updateUserProfile } from "./updateUserProfile";
 const prisma = new PrismaClient();
 import cloudinary from "@/utils/cloudinary";
 import { UploadApiResponse } from 'cloudinary';
+import { verifyTokenUser } from "@/utils/verifyToken";
+
+
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  const userId = parseInt(params.id);
+  if (!userId) {
+    return new NextResponse(
+      JSON.stringify({ message: "Missing user id", success: false }),
+      { status: 400 }
+    );
+  }
+  const token = request.cookies.get("myToken")?.value;
+  if (!token) {
+    return new NextResponse(
+      JSON.stringify({ message: "Not authenticated", success: false }),
+      { status: 401 }
+    );
+  }
+  try {
+    const { valid, decoded } = await verifyTokenUser(token);
+    if (!valid || !decoded) {
+      return new NextResponse(
+        JSON.stringify({ message: "Invalid token", success: false }),
+        { status: 401 }
+      );
+    }
+    const userData = await prisma.user.findUnique({
+      where: {
+        id: userId, 
+      },
+    });
+
+    if (!userData) {
+      return new NextResponse(
+        JSON.stringify({ message: "User not found", success: false }),
+        { status: 404 }
+      );
+    }
+
+    return new NextResponse(
+      JSON.stringify({
+        message: "User data fetched successfully",
+        success: true,
+        data: userData,
+      }),
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error fetching user data:", error); // Imprimir el error para debug
+    return new NextResponse(
+      JSON.stringify({ message: "Error processing request", success: false }),
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(
   req: NextRequest,
