@@ -34,7 +34,9 @@ export async function GET(request:NextRequest) {
   }
     where.NOT = { id: userSession};
 
-    const userCountTotal = await prisma.user.count();
+    const userCountTotal = await prisma.user.count({
+      where,
+    });
     const totalPages = Math.ceil(userCountTotal / 10)
 
     const usuarios = await prisma.user.findMany({
