@@ -8,6 +8,7 @@ import AcmeLogo from "../../assets/logo/logo.png";
 import Image from "next/image";
 import TableUsers from "../../components/TableUsers";
 import AdminData from "./AdminData";
+import ThemeMode from "@/components/ThemeMode";
 
 export default function Admin() {
   return (
@@ -23,7 +24,7 @@ export default function Admin() {
           </NavbarItem>
         </NavbarContent>
         <NavbarContent as="div" justify="end">
-          <AdminData />
+            <AdminData/>
         </NavbarContent>
       </Navbar>
       <TableUsers/>
