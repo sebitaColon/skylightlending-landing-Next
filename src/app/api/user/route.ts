@@ -34,6 +34,9 @@ export async function GET(request:NextRequest) {
   }
     where.NOT = { id: userSession};
 
+    const userCountTotal = await prisma.user.count();
+    const totalPages = Math.ceil(userCountTotal / 10)
+
     const usuarios = await prisma.user.findMany({
       skip: (page - 1) * 10,
       take: 10,
@@ -43,8 +46,11 @@ export async function GET(request:NextRequest) {
       },
     });
 
-    return new NextResponse(JSON.stringify(usuarios), { status: 201 });
-  } catch (e) {
+      return new NextResponse(
+        JSON.stringify({ usuarios, totalPages }),
+        { status: 200 }
+      );
+    } catch (e) {
     return new NextResponse(
       JSON.stringify({ error: "Internal server error" }),
       { status: 500 }
