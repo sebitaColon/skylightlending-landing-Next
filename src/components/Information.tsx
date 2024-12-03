@@ -7,14 +7,14 @@ function Information() {
       <div className="w-full h-full">
         <Image
           src={ImgPanel}
-          alt=""
+          alt="imagenPanel"
           className="w-full lg:h-full lg:object-cover"
         />
       </div>
       <div className="w-full h-full bg-transparent p-10 text-foreground bg-background lg:p-6">
         <p className="text-sm md:text-xl lg:text-xl">
           Using solar panels is beneficial because solar energy is a renewable
-          resource that won't run out as long as the sun exists it reduces
+          resource that won&apos;t run out as long as the sun exists it reduces
           environmental impact by producing clean energy without polluting the
           air or water it offers significant cost savings over time despite the
           initial investment since the electricity generated is free and many

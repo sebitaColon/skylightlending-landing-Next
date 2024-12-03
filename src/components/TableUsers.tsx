@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
@@ -9,7 +9,6 @@ import ModalEdit from "../app/admin/ModalEdit";
 import { updateState } from "../app/admin/serviceAdmin";
 import toast from "react-hot-toast";
 import PaginationComponent from "./UI/PaginationComponent";
-import { user } from "@nextui-org/react";
 
 interface User {
   id: number;
@@ -40,13 +39,13 @@ export default function TableUsers() {
     setCurrentPage(page);
   };
   const router = useRouter();
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const token = Cookies.get("myToken");
     try {
       if (token) {
         const decoded: DecodedToken = jwtDecode(token);
         setAdminRole(decoded.role);
-        const filterUser = { filter: searchUser, filterRole: filterRole, filterIsActive:filterIsActive };
+        const filterUser = { filter: searchUser, filterRole: filterRole, filterIsActive: filterIsActive };
         const query = new URLSearchParams(filterUser).toString();
         const res = await fetch(`/api/user/?${query}&page=${currentPage}&id=${decoded.id}`);
         const { usuarios, totalPages } = await res.json();
@@ -56,11 +55,11 @@ export default function TableUsers() {
     } catch (error) {
       router.push("/login");
     }
-  };
+  }, [searchUser, filterRole, filterIsActive, currentPage, router]);
 
   useEffect(() => {
     fetchData();
-  }, [isModalOpen, searchUser, filterRole, filterIsActive, currentPage]);
+  }, [fetchData, isModalOpen]);
 
   const handleStatusToggle = async (id: number, isActive: boolean) => {
     const result = await updateState(!isActive, id, adminRole);

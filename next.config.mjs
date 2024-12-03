@@ -5,7 +5,7 @@ export default {
       remotePatterns: [
         {
           protocol: 'https',
-          hostname: '',
+          hostname: 'res.cloudinary.com',
           port: '',
           pathname: '/upcxxv9f/**',
         },
