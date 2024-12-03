@@ -1,6 +1,6 @@
 export const updateUserProfile = async ({...data}) => {
     const action = "updateUserProfile"
-    const response = await fetch(`http://localhost:3000/api/user/${data.id}`, {
+    const response = await fetch(`https://skylightlending-landing-next-4p2utm5va.vercel.app/api/user/${data.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -14,7 +14,7 @@ export const updateUserProfile = async ({...data}) => {
   };
   
   export const fetchUserData = async () => {
-    const response = await fetch('http://localhost:3000/api/auth', {
+    const response = await fetch('https://skylightlending-landing-next-4p2utm5va.vercel.app/api/auth', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
