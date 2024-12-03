@@ -1,5 +1,5 @@
 export const fetchUserData = async () => {
-  const response = await fetch('https://skylightlending-landing-next-4p2utm5va.vercel.app/api/auth', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/auth`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

@@ -29,7 +29,7 @@ export async function handleForgotPassword(email: string) {
         },
         JWT_SECRET
       );
-      const resetLink = `https://skylightlending-landing-next-4p2utm5va.vercel.app/reset-password?token=${token}`;
+      const resetLink = `${process.env.NEXT_PUBLIC_API}/reset-password?token=${token}`;
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
