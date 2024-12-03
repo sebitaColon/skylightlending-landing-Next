@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Change directory to app
-        run: cd app
+        run: cd src/app
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
