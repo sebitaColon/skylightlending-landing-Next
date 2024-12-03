@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 const prisma = new PrismaClient();
 import { handleLogin } from "./login";
-import { handleForgotPassword } from "./forgotPassword";
+import { handleForgotPassword } from "./handleForgotPassword";
 import { handleRegister } from "./register";
 import { verifyTokenUser } from "@/utils/verifyToken";
 import { resetPassword } from "./resetPassword";
