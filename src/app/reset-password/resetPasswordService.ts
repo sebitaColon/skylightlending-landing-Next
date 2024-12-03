@@ -3,7 +3,7 @@ export async function resetPasswordService(
   emailToken: string | null
 ) {
   const requestData = { ...data, emailToken };
-  const response = await fetch(`http://localhost:3000/api/auth`, {
+  const response = await fetch(`https://skylightlending-landing-next-4p2utm5va.vercel.app/api/auth`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

@@ -36,7 +36,7 @@ export async function handleRegister(
         },
         JWT_SECRET
       );
-      const emailVerifyLink = `http://localhost:3000/api/verify?token=${emailVerify}`;
+      const emailVerifyLink = `https://skylightlending-landing-next-4p2utm5va.vercel.app/api/verify?token=${emailVerify}`;
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
