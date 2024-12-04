@@ -24,7 +24,7 @@ export default function Nav() {
     "Contact US",
   ];
 
-  const menuItemsLink = ["installer", "ourStory", "news", "login", "contactUS"];
+  const menuItemsLink = ["installer", "our-story", "news", "login", "contact-us"];
 
   return (
     <Navbar
