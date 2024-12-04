@@ -50,8 +50,8 @@ export async function handleRegister(
       const mailOptions = {
         from: "i06047071@gmail.com",
         to: email,
-        subject: "Has solicitado registrarse en skylightlending-landing",
-        text: `Has solicitado registrarse en skylightlending-landing. Haz clic en el siguiente enlace para continuar: ${emailVerifyLink}`,
+        subject: "You have requested to register on Skylight Lending",
+        text: `You have requested to register on Skylight Lending. Click on the following link to proceed: ${emailVerifyLink}`,
         html: `
           <table style="width: 100%; height: 100%; min-height:screen; text-align: center;">
             <tr>
