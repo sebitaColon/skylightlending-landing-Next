@@ -1,7 +1,7 @@
 export const updateState = async (estado: boolean,
     id: number, adminRole: string) => {
     const action = "updateState"
-    const response = await fetch(`https://skylightlending-landing-next-4p2utm5va.vercel.app/api/user/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/user/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ export const updateState = async (estado: boolean,
 
 export const updateUser = async ({...data}) => {
   const action = "updateUser"
-  const response = await fetch(`https://skylightlending-landing-next-4p2utm5va.vercel.app/api/user/${data.id}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/user/${data.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export const updateUser = async ({...data}) => {
 };
 
 export const fetchAdminData = async () => {
-  const response = await fetch('https://skylightlending-landing-next-4p2utm5va.vercel.app/api/auth', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/auth`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

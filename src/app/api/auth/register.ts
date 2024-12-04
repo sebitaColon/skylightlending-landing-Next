@@ -36,7 +36,7 @@ export async function handleRegister(
         },
         JWT_SECRET
       );
-      const emailVerifyLink = `https://skylightlending-landing-next-4p2utm5va.vercel.app/api/verify?token=${emailVerify}`;
+      const emailVerifyLink = `${process.env.NEXT_PUBLIC_API}/api/verify?token=${emailVerify}`;
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -50,8 +50,8 @@ export async function handleRegister(
       const mailOptions = {
         from: "i06047071@gmail.com",
         to: email,
-        subject: "Restablecer tu contraseña",
-        text: `Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace para continuar: ${emailVerifyLink}`,
+        subject: "You have requested to register on Skylight Lending",
+        text: `You have requested to register on Skylight Lending. Click on the following link to proceed: ${emailVerifyLink}`,
         html: `
           <table style="width: 100%; height: 100%; min-height:screen; text-align: center;">
             <tr>
